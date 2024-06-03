@@ -20,6 +20,5 @@ void inserir(int t[], int matricula){
 
 int main(){
     int tabela[TAM];
-    int a;
     inicializar(tabela);
 }
