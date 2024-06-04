@@ -3,20 +3,28 @@
 
 #define TAM 211
 
+typedef struct avaliacao{
+    float notas;
+    struct avaliacao *prox;
+}Avaliacao;
+
 typedef struct aluno{
-    int chave;
+    long int matricula;    
     struct aluno *prox;
-    long int matricula;
     char nome[30]; 
     char curso[20];
     int  ingresso;
     int frequencia[18];
-    float notas; //lista de tamanho variavel, aumenta com o cadastro de avaliações
+    Avaliacao nota; //lista de tamanho variavel, aumenta com o cadastro de avaliações
 }Aluno;
 
 typedef struct lista{
     Aluno *cabeca;
 }Lista;
+
+Aluno *acessa(Lista *L, int i){
+    Aluno *
+}//acessa a matricula do aluno referente a matricula armazenada na lista encadeada
 
 void cadastrar_aluno(){
 
