@@ -10,12 +10,12 @@ typedef struct avaliacao{
 
 typedef struct aluno{
     long int matricula;    
-    struct aluno *prox;
     char nome[30]; 
     char curso[20];
     int  ingresso;
     int frequencia[18];
-    Avaliacao *nota; //lista de tamanho variavel, aumenta com o cadastro de avaliações
+    Avaliacao *nota; //lista de tamanho variavel, aumenta com o cadastro de avaliações 
+    struct aluno *prox;
 }Aluno;
 
 typedef struct lista{
