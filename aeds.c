@@ -3,16 +3,9 @@
 
 #define TAM 211
 
-typedef struct no{
-    int chave;
-    struct no *prox;
-}No;
-
-typedef struct lista{
-    No *cabeca;
-}Lista;
-
 typedef struct aluno{
+    int chave;
+    struct aluno *prox;
     long int matricula;
     char nome[30]; 
     char curso[20];
@@ -20,6 +13,10 @@ typedef struct aluno{
     int frequencia[18];
     float notas; //lista de tamanho variavel, aumenta com o cadastro de avaliações
 }Aluno;
+
+typedef struct lista{
+    Aluno *cabeca;
+}Lista;
 
 void cadastrar_aluno(){
 
