@@ -15,7 +15,7 @@ typedef struct aluno{
     char curso[20];
     int  ingresso;
     int frequencia[18];
-    Avaliacao nota; //lista de tamanho variavel, aumenta com o cadastro de avaliações
+    Avaliacao *nota; //lista de tamanho variavel, aumenta com o cadastro de avaliações
 }Aluno;
 
 typedef struct lista{
