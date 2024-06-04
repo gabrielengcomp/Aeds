@@ -23,8 +23,18 @@ typedef struct lista{
 }Lista;
 
 Aluno *acessa(Lista *L, int i){
-    Aluno *
+    Aluno *aluno = L->cabeca;
+    int j = 0;
+    while(aluno != NULL && j != i){
+        aluno = aluno -> prox;
+        j++;
+    }
+    return aluno;
 }//acessa a matricula do aluno referente a matricula armazenada na lista encadeada
+
+Aluno *busca(Lista *L, int x){
+    
+}
 
 void cadastrar_aluno(){
 
