@@ -10,9 +10,9 @@ typedef struct no{
 
 typedef struct lista{
     No *cabeca;
-}Lista
+}Lista;
 
-struct aluno{
+typedef struct aluno{
     long int matricula;
     char nome[30]; 
     char curso[20];
