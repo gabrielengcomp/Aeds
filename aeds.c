@@ -33,7 +33,12 @@ Aluno *acessa(Lista *L, int i){
 }//acessa a matricula do aluno referente a matricula armazenada na lista encadeada
 
 Aluno *busca(Lista *L, int x){
-    
+    Aluno *aluno = L -> cabeca;
+    int j = 0;
+    while(aluno != NULL && aluno -> matricula != x){
+        aluno = aluno -> prox;
+    }
+    return aluno;
 }
 
 void cadastrar_aluno(){
