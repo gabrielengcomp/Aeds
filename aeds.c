@@ -2,6 +2,16 @@
 #include <stdlib.h>
 
 #define TAM 211
+
+typedef struct no{
+    int chave;
+    struct no *prox;
+}No;
+
+typedef struct lista{
+    No *cabeca;
+}Lista
+
 struct aluno{
     long int matricula;
     char nome[30]; 
@@ -9,7 +19,8 @@ struct aluno{
     int  ingresso;
     int frequencia[18];
     float notas; //lista de tamanho variavel, aumenta com o cadastro de avaliações
-}
+}Aluno;
+
 void cadastrar_aluno(){
 
 }//solicita os dados para o cadastro de um aluno e, se ja existem avaliacoes no sistema, pedeas notas contabilizadas.  Se ja existem chamadas realizadas no sistema, solicita tambem a presenca do aluno em cada um dos dias
