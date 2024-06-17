@@ -73,10 +73,91 @@ void inserir(int t[], int matricula){
     while(t[id] != -1){
 
     }
-    t[id] = valor;
+    //t[id] = valor;
 }
 
 int main(){
+       
+
+    Lista L;
+
+    L.cabeca = NULL;
+
+    
+
     int tabela[TAM];
+
+    int opc = 0;
+
+
+
     inicializar(tabela);
+
+
+
+    while(1)
+
+    {   
+
+        menu();
+
+        printf("Selecione: ");
+
+        scanf("%i", &opc);
+
+
+
+        switch(opc)
+
+        {
+
+            case 1:
+
+                printf("teste");
+
+            break;
+
+            
+
+            case 2:
+
+            
+
+            break;
+
+
+
+            case 3:
+
+            
+
+            break;
+
+
+
+            case 4:
+
+            
+
+            break;
+
+
+
+            case 0:
+
+                return 0;
+
+            
+
+            default:
+
+                printf("Opcao Invalida\n");
+
+            break;
+            
+        }
+
+    }
+
+    return 0;
 }
