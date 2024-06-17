@@ -76,6 +76,24 @@ void inserir(int t[], int matricula){
     //t[id] = valor;
 }
 
+void menu()
+{
+
+    printf("\n___________________________\n");
+
+    printf("[1] Cadastrar Aluno\n");
+
+    printf("[2] Cadastrar Avaliação\n");
+
+    printf("[3] Chamada\n");
+
+    printf("[4] Relatorios\n");
+
+    printf("[0] Sair");
+
+    printf("\n___________________________\n");
+}
+
 int main(){
        
 
