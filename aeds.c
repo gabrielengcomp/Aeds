@@ -8,21 +8,25 @@ typedef struct avaliacao{
     struct avaliacao *prox;
 }Avaliacao;
 
+typedef struct lista_de_avaliacoes{
+    Avaliacao *cabeca;
+}Lista_notas;
+
 typedef struct aluno{
     long int matricula;    
     char nome[30]; 
     char curso[20];
     int  ingresso;
     int frequencia[18];
-    Avaliacao *nota; //lista de tamanho variavel, aumenta com o cadastro de avaliações 
+    Lista_notas *avaliacoes; //lista de tamanho variavel, aumenta com o cadastro de avaliações 
     struct aluno *prox;
 }Aluno;
 
 typedef struct lista{
     Aluno *cabeca;
-}Lista;
+}Lista_alunos;
 
-Aluno *acessa(Lista *L, int i){
+Aluno *acessa(Lista_alunos *L, int i){
     Aluno *aluno = L->cabeca;
     int j = 0;
     while(aluno != NULL && j != i){
@@ -32,7 +36,7 @@ Aluno *acessa(Lista *L, int i){
     return aluno;
 }//acessa a matricula do aluno referente a matricula armazenada na lista encadeada
 
-Aluno *busca(Lista *L, int x){
+Aluno *busca(Lista_alunos *L, int x){
     Aluno *aluno = L -> cabeca;
     int j = 0;
     while(aluno != NULL && aluno -> matricula != x){
@@ -42,6 +46,36 @@ Aluno *busca(Lista *L, int x){
 }
 
 void cadastrar_aluno(){
+
+    Aluno *no;
+
+    no = malloc(sizeof(Aluno));
+
+    if(no == NULL)
+    {
+        printf("ERRO AO ALOCAR MEMORIA");
+        return;
+    }
+
+    printf("\nCADASTRO DE ALUNO (PARA SAIR DIGITE 0)\n");
+    printf("\nMATRICULA: ");
+    scanf(" %i", &no->matricula);
+
+    if(no->matricula == 0)
+        return;
+    
+    printf("\nNOME: ");
+    scanf(" %s", &no->nome);
+    printf("\nCURSO: ");
+    scanf(" %s", &no->curso);
+
+    Lista_notas *notas;
+    notas = malloc(sizeof(Lista_notas));
+    notas->cabeca = NULL;
+    no->avaliacoes = notas;
+
+    //adicionar chamada para inserir()
+
 
 }//solicita os dados para o cadastro de um aluno e, se ja existem avaliacoes no sistema, pedeas notas contabilizadas.  Se ja existem chamadas realizadas no sistema, solicita tambem a presenca do aluno em cada um dos dias
 
@@ -97,7 +131,7 @@ void menu()
 int main(){
        
 
-    Lista L;
+    Lista_alunos L;
 
     L.cabeca = NULL;
 
@@ -111,7 +145,9 @@ int main(){
 
     inicializar(tabela);
 
-
+	printf("\nTRABALHO DE ALGORITIMOS E ESTRUTURAS DE DADOS\n");
+    printf("\nALUNOS: AUGUSTO FREITAS, GABRIEL HENRIQUE PIRES, VICENTE ZANATTA\n");
+    printf("SEMESTRE: 24.1\n");
 
     while(1)
 
