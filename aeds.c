@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #define TAM 211
 
@@ -47,8 +48,9 @@ Aluno *busca(Lista_alunos *L, int x){
 
 void cadastrar_aluno(){
 
-    Aluno *no;
+    char str[30];
 
+    Aluno *no;
     no = malloc(sizeof(Aluno));
 
     if(no == NULL)
@@ -57,23 +59,33 @@ void cadastrar_aluno(){
         return;
     }
 
-    printf("\nCADASTRO DE ALUNO (PARA SAIR DIGITE 0)\n");
+    printf("\n___________________________\n");
+    printf("\nCADASTRO DE ALUNO (PARA VOLTAR DIGITE 0)\n");
     printf("\nMATRICULA: ");
     scanf(" %i", &no->matricula);
 
     if(no->matricula == 0)
         return;
     
-    printf("\nNOME: ");
-    scanf(" %s", &no->nome);
-    printf("\nCURSO: ");
-    scanf(" %s", &no->curso);
+    fflush(stdin);
+    printf("NOME: ");
+    fgets(no->nome, sizeof(no->nome), stdin);
+    /*printf("\nCURSO: ");
+    fgets(str, sizeof(str), stdin);
+    strcpy(no->curso, str);*/
 
     Lista_notas *notas;
     notas = malloc(sizeof(Lista_notas));
     notas->cabeca = NULL;
     no->avaliacoes = notas;
 
+    printf("a");
+    printf("%i", no->matricula);
+    printf("b");
+    printf("%s\n", no->nome);
+    printf("c");
+
+    return;
     //adicionar chamada para inserir()
 
 
@@ -166,9 +178,7 @@ int main(){
         {
 
             case 1:
-
-                printf("teste");
-
+                cadastrar_aluno();
             break;
 
             
