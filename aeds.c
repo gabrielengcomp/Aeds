@@ -46,48 +46,59 @@ Aluno *busca(Lista_alunos *L, int x){
     return aluno;
 }
 
-void cadastrar_aluno(){
-
+void cadastrar_aluno() {
     char str[30];
+    Aluno *no = malloc(sizeof(Aluno));
 
-    Aluno *no;
-    no = malloc(sizeof(Aluno));
-
-    if(no == NULL)
-    {
+    if (no == NULL) {
         printf("ERRO AO ALOCAR MEMORIA");
         return;
     }
 
     printf("\n___________________________\n");
     printf("\nCADASTRO DE ALUNO (PARA VOLTAR DIGITE 0)\n");
-    printf("\nMATRICULA: ");
-    scanf(" %i", &no->matricula);
-
-    if(no->matricula == 0)
-        return;
     
-    fflush(stdin);
+    printf("\nMATRICULA: ");
+    scanf("%ld", &no->matricula);
+
+    if (no->matricula == 0) {
+        free(no);
+        return;
+    }
+
+    getchar(); 
+
     printf("NOME: ");
     fgets(no->nome, sizeof(no->nome), stdin);
-    /*printf("\nCURSO: ");
-    fgets(str, sizeof(str), stdin);
-    strcpy(no->curso, str);*/
+    no->nome[strcspn(no->nome, "\n")] = '\0'; 
 
-    Lista_notas *notas;
-    notas = malloc(sizeof(Lista_notas));
+    printf("CURSO: ");
+    fgets(str, sizeof(str), stdin);
+    str[strcspn(str, "\n")] = '\0'; 
+    strcpy(no->curso, str);
+
+    printf("ANO DE INGRESSO: ");
+    scanf("%i", &no->ingresso);
+
+    Lista_notas *notas = malloc(sizeof(Lista_notas));
+    if (notas == NULL) {
+        free(no);
+        printf("ERRO AO ALOCAR MEMORIA PARA AS AVALIACOES");
+        return;
+    }
+
     notas->cabeca = NULL;
     no->avaliacoes = notas;
 
-    printf("a");
-    printf("%i", no->matricula);
-    printf("b");
-    printf("%s\n", no->nome);
-    printf("c");
+    printf("MATRICULA: %ld\n", no->matricula);
+    printf("NOME: %s\n", no->nome);
+    printf("CURSO: %s\n", no->curso);
+    printf("INGRESSO: %i\n", no->ingresso);
+    printf("CADASTRO REALIZADO COM SUCESSO");
+    printf("\n___________________________\n");
 
-    return;
-    //adicionar chamada para inserir()
-
+    free(notas); 
+    free(no); 
 
 }//solicita os dados para o cadastro de um aluno e, se ja existem avaliacoes no sistema, pedeas notas contabilizadas.  Se ja existem chamadas realizadas no sistema, solicita tambem a presenca do aluno em cada um dos dias
 
@@ -126,34 +137,21 @@ void menu()
 {
 
     printf("\n___________________________\n");
-
     printf("[1] Cadastrar Aluno\n");
-
     printf("[2] Cadastrar Avaliação\n");
-
     printf("[3] Chamada\n");
-
     printf("[4] Relatorios\n");
-
     printf("[0] Sair");
-
     printf("\n___________________________\n");
 }
 
 int main(){
        
-
     Lista_alunos L;
-
     L.cabeca = NULL;
 
-    
-
     int tabela[TAM];
-
     int opc = 0;
-
-
 
     inicializar(tabela);
 
@@ -164,14 +162,9 @@ int main(){
     while(1)
 
     {   
-
         menu();
-
         printf("Selecione: ");
-
         scanf("%i", &opc);
-
-
 
         switch(opc)
 
@@ -181,47 +174,26 @@ int main(){
                 cadastrar_aluno();
             break;
 
-            
-
             case 2:
 
-            
-
             break;
-
-
 
             case 3:
 
-            
-
             break;
-
-
 
             case 4:
 
-            
-
             break;
-
-
 
             case 0:
 
                 return 0;
-
-            
-
+           
             default:
-
                 printf("Opcao Invalida\n");
-
-            break;
-            
+            break;           
         }
-
     }
-
     return 0;
 }
