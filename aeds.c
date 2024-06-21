@@ -50,7 +50,8 @@ void cadastrar_aluno(Lista_alunos lista) {
     char str[30];
     Aluno *no = malloc(sizeof(Aluno));
 
-    if (no == NULL) {
+    if (no == NULL) 
+    {
         printf("ERRO AO ALOCAR MEMORIA");
         return;
     }
@@ -61,7 +62,8 @@ void cadastrar_aluno(Lista_alunos lista) {
     printf("\nMATRICULA: ");
     scanf("%ld", &no->matricula);
 
-    if (no->matricula == 0) {
+    if (no->matricula == 0)
+    {
         free(no);
         return;
     }
@@ -81,7 +83,8 @@ void cadastrar_aluno(Lista_alunos lista) {
     scanf("%i", &no->ingresso);
 
     Lista_notas *notas = malloc(sizeof(Lista_notas));
-    if (notas == NULL) {
+    if (notas == NULL) 
+    {
         free(no);
         printf("ERRO AO ALOCAR MEMORIA PARA AS AVALIACOES");
         return;
@@ -172,14 +175,12 @@ int main(){
     printf("SEMESTRE: 24.1\n");
 
     while(1)
-
     {   
         menu();
         printf("Selecione: ");
         scanf("%i", &opc);
 
         switch(opc)
-
         {
 
             case 1:
