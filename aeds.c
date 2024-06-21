@@ -46,7 +46,7 @@ Aluno *busca(Lista_alunos *L, int x){
     return aluno;
 }
 
-void cadastrar_aluno() {
+void cadastrar_aluno(Lista_alunos lista) {
     char str[30];
     Aluno *no = malloc(sizeof(Aluno));
 
@@ -89,12 +89,14 @@ void cadastrar_aluno() {
 
     notas->cabeca = NULL;
     no->avaliacoes = notas;
+    
+    //inserir_aluno(no, lista);
 
-    printf("MATRICULA: %ld\n", no->matricula);
+    printf("CADASTRO REALIZADO COM SUCESSO");
+    printf("\nMATRICULA: %ld\n", no->matricula);
     printf("NOME: %s\n", no->nome);
     printf("CURSO: %s\n", no->curso);
-    printf("INGRESSO: %i\n", no->ingresso);
-    printf("CADASTRO REALIZADO COM SUCESSO");
+    printf("INGRESSO: %i\n", no->ingresso); 
     printf("\n___________________________\n");
 
     free(notas); 
@@ -125,13 +127,23 @@ void inicializar(int t[]){
 int funcaoespalhamento(int chave){
     return chave%TAM;
 }
-void inserir(int t[], int matricula){
+void inserir_hash(int t[], int matricula){
     int id = funcaoespalhamento(matricula);
     while(t[id] != -1){
 
     }
     //t[id] = valor;
 }
+
+void inserir_aluno(Aluno no, Lista_alunos *cabeca)
+{
+
+}//insere um no Aluno na lista de alunos
+
+void inserir_avaliação(Avaliacao avl, Lista_notas lista)
+{
+
+}//insere no Avaliacao na lista de notas de um aluno
 
 void menu()
 {
@@ -147,8 +159,8 @@ void menu()
 
 int main(){
        
-    Lista_alunos L;
-    L.cabeca = NULL;
+    Lista_alunos Lista_de_alunos;
+    Lista_de_alunos.cabeca = NULL;
 
     int tabela[TAM];
     int opc = 0;
@@ -171,7 +183,7 @@ int main(){
         {
 
             case 1:
-                cadastrar_aluno();
+                cadastrar_aluno(Lista_de_alunos);
             break;
 
             case 2:
