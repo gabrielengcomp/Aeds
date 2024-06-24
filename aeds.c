@@ -25,6 +25,7 @@ typedef struct aluno{
 
 typedef struct lista{
     Aluno *cabeca;
+    Aluno *prox;
 }Lista_alunos;
 
 Aluno *acessa(Lista_alunos *L, int i){
@@ -46,7 +47,27 @@ Aluno *busca(Lista_alunos *L, int x){
     return aluno;
 }
 
-void cadastrar_aluno(Lista_alunos lista) {
+void inserir_aluno(Aluno *novo_aluno, Lista_alunos *lista)
+{
+    Aluno *aux = lista->cabeca;
+    
+    if(aux == NULL)
+    {
+        lista->prox = novo_aluno;
+        novo_aluno->prox = NULL;
+    }
+    else
+    { 
+        while(aux->prox != NULL)
+            aux = aux->prox;
+    
+        aux->prox = novo_aluno;
+        novo_aluno->prox = NULL;
+    }
+}//insere um no Aluno na lista de alunos
+
+void cadastrar_aluno(Lista_alunos *lista) 
+{
     char str[30];
     Aluno *no = malloc(sizeof(Aluno));
 
@@ -93,17 +114,14 @@ void cadastrar_aluno(Lista_alunos lista) {
     notas->cabeca = NULL;
     no->avaliacoes = notas;
     
-    //inserir_aluno(no, lista);
+    inserir_aluno(no, lista);
 
-    printf("CADASTRO REALIZADO COM SUCESSO");
+    printf("\nCADASTRO REALIZADO COM SUCESSO\n");
     printf("\nMATRICULA: %ld\n", no->matricula);
     printf("NOME: %s\n", no->nome);
     printf("CURSO: %s\n", no->curso);
     printf("INGRESSO: %i\n", no->ingresso); 
     printf("\n___________________________\n");
-
-    free(notas); 
-    free(no); 
 
 }//solicita os dados para o cadastro de um aluno e, se ja existem avaliacoes no sistema, pedeas notas contabilizadas.  Se ja existem chamadas realizadas no sistema, solicita tambem a presenca do aluno em cada um dos dias
 
@@ -138,15 +156,26 @@ void inserir_hash(int t[], int matricula){
     //t[id] = valor;
 }
 
-void inserir_aluno(Aluno no, Lista_alunos *cabeca)
-{
-
-}//insere um no Aluno na lista de alunos
-
 void inserir_avaliação(Avaliacao avl, Lista_notas lista)
 {
 
 }//insere no Avaliacao na lista de notas de um aluno
+
+void exibir_lista(Lista_alunos *lista)
+{
+    Aluno* no = lista->cabeca;
+
+    while(no != NULL)
+    {
+        printf("\n%ld", no->matricula);
+        printf("\n%s", no->nome);
+        printf("\n%s", no->curso);
+        printf("\n%d\n",no->ingresso);
+        no = no->prox;
+    }
+
+    printf("*******************");
+}
 
 void menu()
 {
@@ -184,7 +213,7 @@ int main(){
         {
 
             case 1:
-                cadastrar_aluno(Lista_de_alunos);
+                cadastrar_aluno(&Lista_de_alunos);
             break;
 
             case 2:
@@ -197,6 +226,10 @@ int main(){
 
             case 4:
 
+            break;
+
+            case 5:
+                exibir_lista(&Lista_de_alunos);
             break;
 
             case 0:
