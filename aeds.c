@@ -124,7 +124,34 @@ void cadastrar_aluno(Lista_alunos *lista)
 
 }//solicita os dados para o cadastro de um aluno e, se ja existem avaliacoes no sistema, pedeas notas contabilizadas.  Se ja existem chamadas realizadas no sistema, solicita tambem a presenca do aluno em cada um dos dias
 
+void excluir_aluno(Lista_alunos *L, int matricula){
+    Aluno *atual = L->cabeca;
+    Aluno *anterior = NULL;
 
+    if (atual == NULL) {
+        printf("Lista de alunos vazia. Nada a excluir.\n");
+        return;
+    }
+
+    while (atual != NULL && atual->matricula != matricula) {
+        anterior = atual;
+        atual = atual->prox;
+    }
+
+    if (atual == NULL) {
+        printf("Aluno com matrícula %d não encontrado.\n", matricula);
+        return;
+    }
+
+    if (anterior == NULL) {
+        L->cabeca = atual->prox;
+    } else {
+        anterior->prox = atual->prox;
+    }
+
+    free(atual);
+    printf("Aluno com matrícula %d excluído com sucesso.\n", matricula);
+}
 
 void cadastrar_avaliacao(){
 
