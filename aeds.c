@@ -124,6 +124,8 @@ void cadastrar_aluno(Lista_alunos *lista)
 
 }//solicita os dados para o cadastro de um aluno e, se ja existem avaliacoes no sistema, pedeas notas contabilizadas.  Se ja existem chamadas realizadas no sistema, solicita tambem a presenca do aluno em cada um dos dias
 
+
+
 void cadastrar_avaliacao(){
 
 }//recebe uma avaliacao e o seu valor total. Em seguida, solicita a nota de cada aluno
