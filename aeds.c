@@ -49,15 +49,14 @@ Aluno *busca(Lista_alunos *L, int x){
 
 void inserir_aluno(Aluno *novo_aluno, Lista_alunos *lista)
 {
-    Aluno *aux = lista->cabeca;
-    
-    if(aux == NULL)
+    if(lista->cabeca == NULL)
     {
-        lista->prox = novo_aluno;
+        lista->cabeca = novo_aluno;
         novo_aluno->prox = NULL;
     }
     else
     { 
+        Aluno *aux = lista->cabeca;
         while(aux->prox != NULL)
             aux = aux->prox;
     
@@ -167,14 +166,14 @@ void exibir_lista(Lista_alunos *lista)
 
     while(no != NULL)
     {
-        printf("\n%ld", no->matricula);
-        printf("\n%s", no->nome);
-        printf("\n%s", no->curso);
-        printf("\n%d\n",no->ingresso);
+        printf("\nMatrícula: %ld", no->matricula);
+        printf("\nNome: %s", no->nome);
+        printf("\nCurso: %s", no->curso);
+        printf("\nIngresso: %d\n",no->ingresso);
         no = no->prox;
     }
 
-    printf("*******************");
+    printf("___________________________");
 }
 
 void menu()
