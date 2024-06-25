@@ -78,6 +78,7 @@ Aluno *busca(Lista_alunos *L, int x){
 
 void inserir_aluno(Aluno *novo_aluno, Lista_alunos *lista)
 {
+   
     if(lista->cabeca == NULL)
     {
         lista->cabeca = novo_aluno;
