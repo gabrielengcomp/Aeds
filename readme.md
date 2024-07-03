@@ -8,7 +8,7 @@ Para que os relatórios sejam gerados, primeiro, o usuário deve cadastrar os al
 O programa, armazena os alunos cadastrados em uma tabela *hash*. Dentro de cada campo da tabela, há uma lista encadeada com as informações pessoais de cada aluno.
 
 ## *TADs* e *STRUCTS*
-Somadas as structs, as TADs foram utilizadas para armazenar, dentro de um tipo de variável criada, informações que serão armazenadas em lista encadeadas.
+Somadas as structs, as TADs foram utilizadas para armazenar, dentro de um tipo de variável criada, informações que serão alocadas em lista encadeadas.
 ```
 typedef struct avaliacao {
     float notas;
