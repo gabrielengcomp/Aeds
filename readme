@@ -1,3 +1,6 @@
-+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=+ Trabalho Aeds +-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=+
+# CONTROLE DE SALA DE AULA
 Devs: Augusto Freitas, Gabriel Henrique Pires, Vicente Zanatta.
+Este repositório simula ao sistema de controle de sala de aula. O sistema armazena informações a respeito de cada aluno, como: matrícula, nome, curso e ano de ingresso no curso.
+Após armazenar essas informações, o sitema utiliza-as para fazer o cálculo de notas e frequência individual de cada aluno.
 
+## Requerimentos
