@@ -89,7 +89,7 @@ void inserir_aluno(Aluno *novo_aluno, Lista_alunos *lista) {
 }// insere um no Aluno na lista de alunos
 
 int funcaoespalhamento(int chave) {
-    return chave % TAM;
+    return (chave % TAM) + (3,1415926*(chave-TAM))%TAM;
 }
 
 void inserir_hash(Aluno *tabela[], int matricula, Aluno *endereco) {
