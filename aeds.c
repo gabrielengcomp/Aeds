@@ -1,3 +1,4 @@
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -95,7 +96,19 @@ void inserir_aluno(Aluno *novo_aluno, Lista_alunos *lista)
     }
 }//insere um no Aluno na lista de alunos
 
-void cadastrar_aluno(Lista_alunos *lista) 
+int funcaoespalhamento(int chave){
+    return chave%TAM;   
+}
+
+void inserir_hash(int t[], int matricula, Aluno *endereco){
+    int id = funcaoespalhamento(matricula);
+    //while(t[id] != -1){
+    //   id +=1;
+    //}
+    t[id] = endereco;
+}
+
+void cadastrar_aluno(Lista_alunos *lista, Aluno *tab[]) 
 {
     char str[30];
     Aluno *no = malloc(sizeof(Aluno));
@@ -145,6 +158,8 @@ void cadastrar_aluno(Lista_alunos *lista)
     
     inserir_aluno(no, lista);
 
+    inserir_hash(tab, no->matricula, &no);
+
     printf("\nCADASTRO REALIZADO COM SUCESSO\n");
     printf("\nMATRICULA: %ld\n", no->matricula);
     printf("NOME: %s\n", no->nome);
@@ -170,25 +185,6 @@ void relatorio_notas(){
 
 }//  Imprime o relatorio de notas de uma determinada avaliacao informando a nota maxima,mınima e media.  Apos isso, imprime todas as notas em ordem decrescente sem indicar o nome dos alunos
 
-void inicializar(int t[]){
-    for(int i = 0; i<TAM; i++)
-        t[i]=-1;
-}
-int funcaoespalhamento(int chave){
-    return chave%TAM;
-}
-void inserir_hash(int t[], int matricula){
-    int id = funcaoespalhamento(matricula);
-    while(t[id] != -1){
-
-    }
-    //t[id] = valor;
-}
-
-void inserir_avaliação(Avaliacao avl, Lista_notas lista)
-{
-
-}//insere no Avaliacao na lista de notas de um aluno
 
 void exibir_lista(Lista_alunos *lista)
 {
@@ -223,10 +219,9 @@ int main(){
     Lista_alunos Lista_de_alunos;
     Lista_de_alunos.cabeca = NULL;
 
-    int tabela[TAM];
+    Aluno tabela[TAM];
     int opc = 0;
 
-    inicializar(tabela);
 
 	printf("\nTRABALHO DE ALGORITIMOS E ESTRUTURAS DE DADOS\n");
     printf("\nALUNOS: AUGUSTO FREITAS, GABRIEL HENRIQUE PIRES, VICENTE ZANATTA\n");
@@ -238,11 +233,12 @@ int main(){
         printf("Selecione: ");
         scanf("%i", &opc);
 
+
         switch(opc)
         {
 
             case 1:
-                cadastrar_aluno(&Lista_de_alunos);
+                cadastrar_aluno(&Lista_de_alunos, tabela);
             break;
 
             case 2:
@@ -254,6 +250,9 @@ int main(){
             break;
 
             case 4:
+                for(int i = 0; i<TAM; i++){
+                    printf("%ld\n", no->matricula);
+                }
 
             break;
 
