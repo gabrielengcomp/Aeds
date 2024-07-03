@@ -1,45 +1,43 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 #define TAM 211
 
-typedef struct avaliacao{
+typedef struct avaliacao {
     float notas;
     struct avaliacao *prox;
-}Avaliacao;
+} Avaliacao;
 
-typedef struct lista_de_avaliacoes{
+typedef struct lista_de_avaliacoes {
     Avaliacao *cabeca;
-}Lista_notas;
+} Lista_notas;
 
-typedef struct aluno{
-    long int matricula;    
-    char nome[30]; 
+typedef struct aluno {
+    long int matricula;
+    char nome[30];
     char curso[20];
-    int  ingresso;
+    int ingresso;
     int frequencia[18];
-    Lista_notas *avaliacoes; //lista de tamanho variavel, aumenta com o cadastro de avaliações 
+    Lista_notas *avaliacoes; // lista de tamanho variável, aumenta com o cadastro de avaliações 
     struct aluno *prox;
-}Aluno;
+} Aluno;
 
-typedef struct lista{
+typedef struct lista {
     Aluno *cabeca;
-    Aluno *prox;
-}Lista_alunos;
+} Lista_alunos;
 
-Aluno *acessa(Lista_alunos *L, int i){
+Aluno *acessa(Lista_alunos *L, int i) {
     Aluno *aluno = L->cabeca;
     int j = 0;
-    while(aluno != NULL && j != i){
-        aluno = aluno -> prox;
+    while (aluno != NULL && j != i) {
+        aluno = aluno->prox;
         j++;
     }
     return aluno;
-}//acessa a matricula do aluno referente a matricula armazenada na lista encadeada
+}// acessa a matrícula do aluno referente a matrícula armazenada na lista encadeada
 
-void excluir_aluno(Lista_alunos *L, int matricula){
+void excluir_aluno(Lista_alunos *L, int matricula) {
     Aluno *atual = L->cabeca;
     Aluno *anterior = NULL;
 
@@ -68,87 +66,78 @@ void excluir_aluno(Lista_alunos *L, int matricula){
     printf("Aluno com matrícula %d excluído com sucesso.\n", matricula);
 }
 
-Aluno *busca(Lista_alunos *L, int x){
-    Aluno *aluno = L -> cabeca;
-    int j = 0;
-    while(aluno != NULL && aluno -> matricula != x){
-        aluno = aluno -> prox;
+Aluno *busca(Lista_alunos *L, int x) {
+    Aluno *aluno = L->cabeca;
+    while (aluno != NULL && aluno->matricula != x) {
+        aluno = aluno->prox;
     }
     return aluno;
 }
 
-void inserir_aluno(Aluno *novo_aluno, Lista_alunos *lista)
-{
-   
-    if(lista->cabeca == NULL)
-    {
+void inserir_aluno(Aluno *novo_aluno, Lista_alunos *lista) {
+    if (lista->cabeca == NULL) {
         lista->cabeca = novo_aluno;
         novo_aluno->prox = NULL;
-    }
-    else
-    { 
+    } else {
         Aluno *aux = lista->cabeca;
-        while(aux->prox != NULL)
+        while (aux->prox != NULL)
             aux = aux->prox;
-    
+
         aux->prox = novo_aluno;
         novo_aluno->prox = NULL;
     }
-}//insere um no Aluno na lista de alunos
+}// insere um no Aluno na lista de alunos
 
-int funcaoespalhamento(int chave){
-    return chave%TAM;   
+int funcaoespalhamento(int chave) {
+    return chave % TAM;
 }
 
-void inserir_hash(int t[], int matricula, int endereco){
+void inserir_hash(Aluno *tabela[], int matricula, Aluno *endereco) {
     int id = funcaoespalhamento(matricula);
-    //while(t[id] != -1){
-    //   id +=1;
-    //}
-    t[id] = endereco;
+    while (tabela[id] != NULL) {
+        id = (id + 1) % TAM;
+    }
+    tabela[id] = endereco;
 }
 
-void cadastrar_aluno(Lista_alunos *lista, int *tab[]) 
-{
+void cadastrar_aluno(Lista_alunos *lista, Aluno *tabela[]) {
     char str[30];
     Aluno *no = malloc(sizeof(Aluno));
 
-    if (no == NULL) 
-    {
+    if (no == NULL) {
         printf("ERRO AO ALOCAR MEMORIA");
         return;
     }
 
     printf("\n___________________________\n");
     printf("\nCADASTRO DE ALUNO (PARA VOLTAR DIGITE 0)\n");
-    
+
     printf("\nMATRICULA: ");
     scanf("%ld", &no->matricula);
 
-    if (no->matricula == 0)
-    {
+    if (no->matricula == 0) {
         free(no);
         return;
     }
-    inserir_hash(*tab, no->matricula, &no);
 
-    getchar(); 
+    inserir_hash(tabela, no->matricula, no);
+
+    getchar();
 
     printf("NOME: ");
     fgets(no->nome, sizeof(no->nome), stdin);
-    no->nome[strcspn(no->nome, "\n")] = '\0'; 
+    no->nome[strcspn(no->nome, "\n")] = '\0';
 
     printf("CURSO: ");
     fgets(str, sizeof(str), stdin);
-    str[strcspn(str, "\n")] = '\0'; 
+    str[strcspn(str, "\n")] = '\0';
     strcpy(no->curso, str);
 
     printf("ANO DE INGRESSO: ");
     scanf("%i", &no->ingresso);
 
     Lista_notas *notas = malloc(sizeof(Lista_notas));
-    if (notas == NULL) 
-    {
+    if (notas == NULL) {
         free(no);
         printf("ERRO AO ALOCAR MEMORIA PARA AS AVALIACOES");
         return;
@@ -156,117 +145,123 @@ void cadastrar_aluno(Lista_alunos *lista, int *tab[])
 
     notas->cabeca = NULL;
     no->avaliacoes = notas;
-    
+
     inserir_aluno(no, lista);
 
-    
     printf("\nCADASTRO REALIZADO COM SUCESSO\n");
     printf("\nMATRICULA: %ld\n", no->matricula);
     printf("NOME: %s\n", no->nome);
     printf("CURSO: %s\n", no->curso);
-    printf("INGRESSO: %i\n", no->ingresso); 
+    printf("INGRESSO: %i\n", no->ingresso);
     printf("\n___________________________\n");
 
-}//solicita os dados para o cadastro de um aluno e, se ja existem avaliacoes no sistema, pedeas notas contabilizadas.  Se ja existem chamadas realizadas no sistema, solicita tambem a presenca do aluno em cada um dos dias
+}// solicita os dados para o cadastro de um aluno e, se já existem avaliações no sistema, pede as notas contabilizadas. Se já existem chamadas realizadas no sistema, solicita também a presença do aluno em cada um dos dias
 
-void cadastrar_avaliacao(){
+void cadastrar_avaliacao() {
 
-}//recebe uma avaliacao e o seu valor total. Em seguida, solicita a nota de cada aluno
+}// recebe uma avaliação e o seu valor total. Em seguida, solicita a nota de cada aluno
 
-void realizar_chamada(){
+void realizar_chamada() {
 
-}//contabiliza a frequencia dos alunos em um determinado dia, perguntando quem esta presentee ausente.  Assim que um aluno atingir 10 faltas, deve imprimir um aviso dizendo que o mesmo foi reprovadopor infrequencia.
+}// contabiliza a frequência dos alunos em um determinado dia, perguntando quem está presente e ausente. Assim que um aluno atingir 10 faltas, deve imprimir um aviso dizendo que o mesmo foi reprovado por infrequência.
 
-void relatorio_alunos(){
+void relatorio_alunos() {
 
-}// Imprime a lista de alunos informando a matrıcula, nome, soma de todas as notas ja registradas e o numero de faltas.  Alem disso, antes de imprimir o relatorio da a opcao de ordenar a lista porum destes campos.
+}// Imprime a lista de alunos informando a matrícula, nome, soma de todas as notas já registradas e o número de faltas. Além disso, antes de imprimir o relatório dá a opção de ordenar a lista por um destes campos.
 
-void relatorio_notas(){
+void relatorio_notas() {
 
-}//  Imprime o relatorio de notas de uma determinada avaliacao informando a nota maxima,mınima e media.  Apos isso, imprime todas as notas em ordem decrescente sem indicar o nome dos alunos
+}// Imprime o relatório de notas de uma determinada avaliação informando a nota máxima, mínima e média. Após isso, imprime todas as notas em ordem decrescente sem indicar o nome dos alunos
 
+void exibir_lista(Lista_alunos *lista) {
+    Aluno *no = lista->cabeca;
 
-void exibir_lista(Lista_alunos *lista)
-{
-    Aluno* no = lista->cabeca;
-
-    while(no != NULL)
-    {
+    while (no != NULL) {
         printf("\nMatrícula: %ld", no->matricula);
         printf("\nNome: %s", no->nome);
         printf("\nCurso: %s", no->curso);
-        printf("\nIngresso: %d\n",no->ingresso);
+        printf("\nIngresso: %d\n", no->ingresso);
         no = no->prox;
     }
 
     printf("___________________________");
 }
 
-void menu()
-{
+void exibir_tabela_hash(Aluno *tabela[]) {
+    printf("\nTabela Hash:\n");
+    for (int i = 0; i < TAM; i++) {
+        if (tabela[i] != NULL) {
+            printf("Posição %d:\n", i);
+            Aluno *aluno = tabela[i];
+            printf("\tMatrícula: %ld\n", aluno->matricula);
+            printf("\tNome: %s\n", aluno->nome);
+            printf("\tCurso: %s\n", aluno->curso);
+            printf("\tIngresso: %d\n", aluno->ingresso);
+        }
+    }
+    printf("___________________________\n");
+}
 
+void menu() {
     printf("\n___________________________\n");
     printf("[1] Cadastrar Aluno\n");
     printf("[2] Cadastrar Avaliação\n");
     printf("[3] Chamada\n");
-    printf("[4] Relatorios\n");
-    printf("[0] Sair");
-    printf("\n___________________________\n");
+    printf("[4] Relatórios\n");
+    printf("[5] Exibir Lista de Alunos\n");
+    printf("[6] Exibir Tabela Hash\n");
+    printf("[0] Sair\n");
+    printf("___________________________\n");
 }
 
-int main(){
-       
+int main() {
+
     Lista_alunos Lista_de_alunos;
     Lista_de_alunos.cabeca = NULL;
 
-    int tabela[TAM];
+    Aluno *tabela[TAM] = {NULL};
     int opc = 0;
 
-
-	printf("\nTRABALHO DE ALGORITIMOS E ESTRUTURAS DE DADOS\n");
+    printf("\nTRABALHO DE ALGORITMOS E ESTRUTURAS DE DADOS\n");
     printf("\nALUNOS: AUGUSTO FREITAS, GABRIEL HENRIQUE PIRES, VICENTE ZANATTA\n");
     printf("SEMESTRE: 24.1\n");
 
-    while(1)
-    {   
+    while (1) {
         menu();
         printf("Selecione: ");
         scanf("%i", &opc);
 
-
-        switch(opc)
-        {
-
+        switch (opc) {
             case 1:
                 cadastrar_aluno(&Lista_de_alunos, tabela);
-            break;
+                break;
 
             case 2:
-
-            break;
+                // Implementar função cadastrar_avaliacao()
+                break;
 
             case 3:
-
-            break;
+                // Implementar função realizar_chamada()
+                break;
 
             case 4:
-                for(int i = 0; i<TAM; i++){
-                    printf("%ld\n", no->matricula);
-                }
-
-            break;
+                // Implementar função relatorio_alunos()
+                break;
 
             case 5:
                 exibir_lista(&Lista_de_alunos);
-            break;
+                break;
+
+            case 6:
+                exibir_tabela_hash(tabela);
+                break;
 
             case 0:
-
                 return 0;
-           
+
             default:
-                printf("Opcao Invalida\n");
-            break;           
+                printf("Opção Inválida\n");
+                break;
         }
     }
     return 0;
