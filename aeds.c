@@ -100,7 +100,7 @@ int funcaoespalhamento(int chave){
     return chave%TAM;   
 }
 
-void inserir_hash(int t[], int matricula, Aluno *endereco){
+void inserir_hash(int t[], int matricula, int endereco){
     int id = funcaoespalhamento(matricula);
     //while(t[id] != -1){
     //   id +=1;
@@ -108,7 +108,7 @@ void inserir_hash(int t[], int matricula, Aluno *endereco){
     t[id] = endereco;
 }
 
-void cadastrar_aluno(Lista_alunos *lista, Aluno *tab[]) 
+void cadastrar_aluno(Lista_alunos *lista, int *tab[]) 
 {
     char str[30];
     Aluno *no = malloc(sizeof(Aluno));
@@ -130,6 +130,7 @@ void cadastrar_aluno(Lista_alunos *lista, Aluno *tab[])
         free(no);
         return;
     }
+    inserir_hash(*tab, no->matricula, &no);
 
     getchar(); 
 
@@ -158,8 +159,7 @@ void cadastrar_aluno(Lista_alunos *lista, Aluno *tab[])
     
     inserir_aluno(no, lista);
 
-    inserir_hash(tab, no->matricula, &no);
-
+    
     printf("\nCADASTRO REALIZADO COM SUCESSO\n");
     printf("\nMATRICULA: %ld\n", no->matricula);
     printf("NOME: %s\n", no->nome);
@@ -219,7 +219,7 @@ int main(){
     Lista_alunos Lista_de_alunos;
     Lista_de_alunos.cabeca = NULL;
 
-    Aluno tabela[TAM];
+    int tabela[TAM];
     int opc = 0;
 
 
