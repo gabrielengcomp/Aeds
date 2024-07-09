@@ -14,7 +14,7 @@ typedef struct lista_de_avaliacoes {
 } Lista_notas;
 
 typedef struct aluno {
-    long int matricula;
+    int matricula;
     char nome[30];
     char curso[20];
     int ingresso;
@@ -88,14 +88,28 @@ void inserir_aluno(Aluno *novo_aluno, Lista_alunos *lista) {
     }
 }// insere um no Aluno na lista de alunos
 
-int funcaoespalhamento(int chave) {
-    return (chave % TAM) + (3,1415926*(chave-TAM))%TAM;
+int funcaoespalhamento(int chave) {//ocorre overflow em numeros grandes
+
+    int val = 0;
+
+    val = ((chave % TAM) + (3,1415926*(chave-TAM)))%TAM;
+    printf("%ld", val);
+
+    return val;
 }
 
 void inserir_hash(Aluno *tabela[], int matricula, Aluno *endereco) {
-    int id = funcaoespalhamento(matricula);
+    
+    int i = 0;
+    int id = 0;
+
+    id = funcaoespalhamento(matricula);
+
     while (tabela[id] != NULL) {
-        id = (id + 1) % TAM;
+        
+        id = (id + i) % TAM;
+        printf("\nid) %i\n", id);
+        i++;
     }
     tabela[id] = endereco;
 }
@@ -113,14 +127,18 @@ void cadastrar_aluno(Lista_alunos *lista, Aluno *tabela[]) {
     printf("\nCADASTRO DE ALUNO (PARA VOLTAR DIGITE 0)\n");
 
     printf("\nMATRICULA: ");
-    scanf("%ld", &no->matricula);
+    scanf("%i", &no->matricula);
+    printf("\nc");
 
     if (no->matricula == 0) {
+        printf("\nd");
         free(no);
         return;
     }
 
+    printf("\na");
     inserir_hash(tabela, no->matricula, no);
+    printf("\nb");
 
     getchar();
 
