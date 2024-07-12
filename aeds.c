@@ -108,10 +108,22 @@ void inserir_hash(Aluno *tabela[], int matricula, Aluno *endereco) {
     while (tabela[id] != NULL) {
         
         id = (id + i) % TAM;
-        printf("\nid) %i\n", id);
+        //printf("\nid) %i\n", id);
         i++;
     }
     tabela[id] = endereco;
+}
+
+Aluno* buscarHash (Aluno *tabela[], int matricula)
+{
+    int ind;
+
+    ind = funcaoespalhamento(matricula);
+
+    while(tabela[ind]->matricula != matricula)
+        ind = (ind++) % TAM;
+    
+    return tabela[ind];
 }
 
 void cadastrar_aluno(Lista_alunos *lista, Aluno *tabela[]) {
@@ -128,17 +140,13 @@ void cadastrar_aluno(Lista_alunos *lista, Aluno *tabela[]) {
 
     printf("\nMATRICULA: ");
     scanf("%i", &no->matricula);
-    printf("\nc");
 
     if (no->matricula == 0) {
-        printf("\nd");
         free(no);
         return;
     }
 
-    printf("\na");
     inserir_hash(tabela, no->matricula, no);
-    printf("\nb");
 
     getchar();
 
@@ -175,7 +183,40 @@ void cadastrar_aluno(Lista_alunos *lista, Aluno *tabela[]) {
 
 }// solicita os dados para o cadastro de um aluno e, se já existem avaliações no sistema, pede as notas contabilizadas. Se já existem chamadas realizadas no sistema, solicita também a presença do aluno em cada um dos dias
 
-void cadastrar_avaliacao() {
+void cadastrar_avaliacao(Aluno **tabela) {
+
+    int nota = 0;
+    int matricula = 0;
+    int id = 0;
+    int cond = 1;
+
+    printf("___________________________");
+    printf("\nCADASTRO DE AVALIACOES (PARA VOLTAR DIGITE 0): ");
+
+    while(1)
+    {
+        cond = 1;
+        printf("\nMatricula: ");
+        scanf("%i", &matricula);
+
+        if(matricula == 0)
+            break;
+        else
+        {
+            printf("(DIGITE -1 PARA SAIR):\n");
+            while(cond)
+            {
+                printf("\nNOTA: ");
+                scanf("%i", &nota);
+                cond = (nota == -1) ? 0 : 1; 
+
+            }
+        }
+
+    }
+
+
+
 
 }// recebe uma avaliação e o seu valor total. Em seguida, solicita a nota de cada aluno
 
@@ -255,7 +296,7 @@ int main() {
                 break;
 
             case 2:
-                // Implementar função cadastrar_avaliacao()
+                cadastrar_avaliacao(tabela);
                 break;
 
             case 3:
@@ -273,7 +314,7 @@ int main() {
             case 6:
                 exibir_tabela_hash(tabela);
                 break;
-
+            
             case 0:
                 return 0;
 
