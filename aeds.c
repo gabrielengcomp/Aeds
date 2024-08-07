@@ -93,8 +93,8 @@ int funcaoespalhamento(int chave) {//ocorre overflow em numeros grandes
 
     int val = 0;
 
-    val = ((chave % TAM) + (3,1415926*(chave-TAM)))%TAM;
-    printf("%i", val);
+    val = ((chave % TAM) + (long int)(10^24*(chave)))%TAM;
+    printf("%i\n", val);
 
     return val;
 }
@@ -176,7 +176,7 @@ void cadastrar_aluno(Lista_alunos *lista, Aluno *tabela[]) {
     inserir_aluno(no, lista);
 
     printf("\nCADASTRO REALIZADO COM SUCESSO\n");
-    printf("\nMATRICULA: %ld\n", no->matricula);
+    printf("\nMATRICULA: %d\n", no->matricula);
     printf("NOME: %s\n", no->nome);
     printf("CURSO: %s\n", no->curso);
     printf("INGRESSO: %i\n", no->ingresso);
@@ -222,7 +222,7 @@ void cadastrar_avaliacao(Aluno **tabela) {
             while(cond)
             {
                 printf("\nNOTA: ");
-                scanf("%.2f", &nota);
+                scanf("%2f", &nota);
                 cond = (nota == -1) ? 0 : 1;
 
                 printf("\na\n");
@@ -307,7 +307,7 @@ void exibir_lista(Lista_alunos *lista) {
     else
     { 
         while (no != NULL) {
-            printf("\nMatrícula: %ld", no->matricula);
+            printf("\nMatrícula: %d", no->matricula);
             printf("\nNome: %s", no->nome);
             printf("\nCurso: %s", no->curso);
             printf("\nIngresso: %d\n", no->ingresso);
@@ -324,7 +324,7 @@ void exibir_tabela_hash(Aluno *tabela[]) {
         if (tabela[i] != NULL) {
             printf("Posição %d:\n", i);
             Aluno *aluno = tabela[i];
-            printf("\tMatrícula: %ld\n", aluno->matricula);
+            printf("\tMatrícula: %d\n", aluno->matricula);
             printf("\tNome: %s\n", aluno->nome);
             printf("\tCurso: %s\n", aluno->curso);
             printf("\tIngresso: %d\n", aluno->ingresso);
