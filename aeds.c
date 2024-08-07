@@ -89,16 +89,15 @@ void inserir_aluno(Aluno *novo_aluno, Lista_alunos *lista) {
     }
 }// insere um no Aluno na lista de alunos
 
-int funcaoespalhamento(int chave) {//ocorre overflow em numeros grandes
+int funcaoespalhamento(int chave) {
 
     int val = 0;
-
-    val = ((chave % TAM) + (long int)(10^24*(chave)))%TAM;
+    long int a = ((3^10)*20);
+    val = (a*(a + chave^3))%TAM;
     printf("%i\n", val);
 
     return val;
 }
-
 void inserir_hash(Aluno *tabela[], int matricula, Aluno *endereco) {
     
     int i = 0;
