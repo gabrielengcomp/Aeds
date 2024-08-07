@@ -38,17 +38,107 @@ typedef struct lista {
 ## *HASH*
 Sempre que um aluno é cadastrado, ao preencher o número da matrícula de tal, ele automaticamente é adicionada a um campo da tabela hash. A tabela Hash recebe uma lista encadeada contendo as informações dos alunos e armazena-as em cada setor de um vetor. Para armazenar os alunos, a função "inserir_hash" faze o papel de inserir os alunos em seu determinado campo da tabela e para evitar colisões, a função "espalhamento" ajuda a separar alunos com números de matrículas muito parecidos ou próximos uns dos outros.
  ```
-int funcaoespalhamento(int chave) {
-    return chave % TAM;
+int funcaoespalhamento(int chave){
+
+    int val = 0;
+
+    val = ((chave % TAM) + (3,1415926*(chave-TAM)))%TAM;
+    printf("%i", val);
+
+    return val;
 }
-void inserir_hash(Aluno *tabela[], int matricula, Aluno *endereco) {
-    int id = funcaoespalhamento(matricula);
+
+void inserir_hash(Aluno *tabela[], int matricula, Aluno *endereco){
+    
+    int i = 0;
+    int id = 0;
+
+    id = funcaoespalhamento(matricula);
+
     while (tabela[id] != NULL) {
-        id = (id + 1) % TAM;
+        
+        id = (id + i) % TAM;
+        printf("\nid) %i\n", id);
+        i++;
     }
     tabela[id] = endereco;
 }
-```
 
+Aluno* buscarHash (Aluno *tabela[], int matricula){
+    int ind;
+
+    ind = funcaoespalhamento(matricula);
+
+    while(tabela[ind]->matricula != matricula)
+        ind = (ind++) % TAM;
+    
+    return tabela[ind];
+}
+```
+## SORTs
 
 :construction: Documentação em construção :construction:
+
+### Principais Funções:
+
+#### Cadastrar aluno:
+Para realizar o cadastro dos alunos, a função "cadastrar_aluno" é chamada e requer, como argumento da função, a lista encadeada dos alunos, para que o aluno seja salvo dentro dela e a tabela hash, que usará o endereço do aluno na lista para armazena-los. Nela, a primeira execução refere-se a criação de uma lista encadeada especifica para o aluno que está sendo cadastrado, ela irá armazenar os dados da matrícula, nome, curso e ano de ingresso.  
+```
+void cadastrar_aluno(Aluno *tabela[]) {
+    char str[30];
+    Aluno *no = malloc(sizeof(Aluno));
+
+    if (no == NULL) {
+        printf("ERRO AO ALOCAR MEMORIA");
+        return;
+    }
+
+    printf("\n___________________________\n");
+    printf("\nCADASTRO DE ALUNO (PARA VOLTAR DIGITE 0)\n");
+
+    printf("\nMATRICULA: ");
+    scanf("%i", &no->matricula);
+
+    if (no->matricula == 0) {
+        free(no);
+        return;
+    }
+
+    inserir_hash(tabela, no->matricula, no);
+
+    getchar();
+
+    printf("NOME: ");
+    fgets(no->nome, sizeof(no->nome), stdin);
+    no->nome[strcspn(no->nome, "\n")] = '\0';
+
+    printf("CURSO: ");
+    fgets(str, sizeof(str), stdin);
+    str[strcspn(str, "\n")] = '\0';
+    strcpy(no->curso, str);
+
+    printf("ANO DE INGRESSO: ");
+    scanf("%i", &no->ingresso);
+
+    Avaliacoes *notas = malloc(sizeof(Avaliacoes));
+    if (notas == NULL) {
+        free(no);
+        printf("ERRO AO ALOCAR MEMORIA PARA AS AVALIACOES");
+        return;
+    }
+
+    notas = NULL;
+    no->aula = 0;
+
+    inserir_aluno(no, lista);
+
+    printf("\nCADASTRO REALIZADO COM SUCESSO\n");
+    printf("\nMATRICULA: %ld\n", no->matricula);
+    printf("NOME: %s\n", no->nome);
+    printf("CURSO: %s\n", no->curso);
+    printf("INGRESSO: %i\n", no->ingresso);
+    printf("\n___________________________\n");
+
+}
+```
+
