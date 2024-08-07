@@ -338,9 +338,10 @@ void menu() {
     printf("[1] Cadastrar Aluno\n");
     printf("[2] Cadastrar Avaliação\n");
     printf("[3] Chamada\n");
-    printf("[4] Relatórios\n");
-    printf("[5] Exibir Lista de Alunos\n");
-    printf("[6] Exibir Tabela Hash\n");
+    printf("[4] Relatório de alunos\n");
+    printf("[5] Relatório de notas\n");
+    printf("[6] Exibir Lista de Alunos\n");
+    printf("[7] Exibir Tabela Hash\n");
     printf("[0] Sair\n");
     printf("___________________________\n");
 }
@@ -376,14 +377,18 @@ int main() {
                 break;
 
             case 4:
-                // Implementar função relatorio_alunos()
+                relatorio_alunos();
                 break;
 
             case 5:
+                relatorio_notas();
+                break;
+            
+            case 6:
                 exibir_lista(&Lista_de_alunos);
                 break;
 
-            case 6:
+            case 7:
                 exibir_tabela_hash(tabela);
                 break;
             
