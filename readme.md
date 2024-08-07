@@ -82,7 +82,7 @@ Aluno* buscarHash (Aluno *tabela[], int matricula){
 ### Principais Funções:
 
 #### Cadastrar aluno:
-Para realizar o cadastro dos alunos, a função "cadastrar_aluno" é chamada e requer, como argumento da função, a lista encadeada dos alunos, para que o aluno seja salvo dentro dela e a tabela hash, que usará o endereço do aluno na lista para armazena-los. Nela, a primeira execução refere-se a criação de uma lista encadeada especifica para o aluno que está sendo cadastrado, ela irá armazenar os dados da matrícula, nome, curso e ano de ingresso.  
+Para realizar o cadastro dos alunos, a função "cadastrar_aluno" é chamada e requer, como argumento da função, a lista encadeada dos alunos, para que o aluno seja salvo dentro dela e a tabela hash, que usará a matrícula do aluno para gerar o índice na tabela hash e, por fim, para armazena-los. Nela, a primeira execução refere-se a criação de uma lista encadeada especifica para o aluno que está sendo cadastrado, ela irá armazenar os dados da matrícula, nome, curso e ano de ingresso.  
 ```
 void cadastrar_aluno(Aluno *tabela[]) {
     char str[30];
