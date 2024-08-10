@@ -332,6 +332,77 @@ void exibir_tabela_hash(Aluno *tabela[]) {
     printf("___________________________\n");
 }
 
+/*
+SORTS
+
+Aluno* MergeSort(Aluno *a, Aluno *b){
+    Aluno* resultado = NULL;
+
+    if (a == NULL){
+        return (b);
+    }
+
+    else if (b == NULL){
+        return (a);
+    }
+
+    if (a->matricula <= b->matricula) {
+        resultado = a;
+        resultado->prox = MergeSort(a->prox, b);
+    }
+
+    else{
+        resultado = b;
+        resultado->prox = MergeSort(a, b->prox);
+    }
+
+    return (resultado);
+}
+
+void DivideLista(Aluno* aluno, Aluno** frontRef, Aluno** backRef){
+    Aluno* p2; //pula 2
+    Aluno* p1; // pula 1
+    p1 = aluno;
+    p2 = aluno->prox;
+
+    while (p2 != NULL) {
+        p2 = p2->prox;
+        if (p2 != NULL) {
+            p1 = p1->prox;
+            p2 = p2->prox;
+        }
+    }
+
+    *frontRef = aluno;
+    *backRef = p1->prox;
+    p1->prox = NULL;
+}
+
+void Merge(Aluno** lista){
+     Aluno *x = *lista;
+     Aluno *a;
+     Aluno *b;
+
+    if ((x == NULL) || (x->prox == NULL)) {
+        return;
+    }
+
+    DivideLista(x, &a, &b);
+    Merge(&a);
+    Merge(&b);
+
+    *lista = MergeSort(a, b);
+}
+
+void PrintaLista(Aluno *aluno){
+    while (aluno != NULL) {
+        printf("%d ", aluno->matricula);
+        aluno = aluno->prox;
+    }
+}
+*/
+
+
 void menu() {
     printf("\n___________________________\n");
     printf("[1] Cadastrar Aluno\n");
