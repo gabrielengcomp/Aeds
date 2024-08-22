@@ -263,6 +263,20 @@ void cadastrar_avaliacao(Aluno **tabela) {
 
 }// recebe uma avaliação e o seu valor total. Em seguida, solicita a nota de cada aluno
 
+int verificar_frequencia (Aluno *aluno) //returna quantas faltas um aluno tem  
+{
+
+    int i = 0;
+    int faltas = 0;
+
+    for(;i <= 18; i++)
+        faltas += aluno->frequencia[i];
+
+    return faltas;
+    
+
+}
+
 void realizar_chamada(Lista_alunos *lista) {
     
     Aluno *no = lista->cabeca;
@@ -274,19 +288,17 @@ void realizar_chamada(Lista_alunos *lista) {
         printf("%s | %i: ", no->nome, no->matricula);
         scanf("%i", &no->frequencia[no->aula]);
         no->aula++;
+        if (verificar_frequencia(no) > 18)
+        {
+            printf("\n!! ALUNO REPROVADO POR FREQUENCIA !!\n");
+        }
+
         no = no->prox;
 
     }
 
-   /* int i = 0;
-
-    for(;i <= 18; i++)
-    {
-        printf("%i ", no->frequencia[i]);
-    }
-    printf("\n");*/
-
 }// contabiliza a frequência dos alunos em um determinado dia, perguntando quem está presente e ausente. Assim que um aluno atingir 10 faltas, deve imprimir um aviso dizendo que o mesmo foi reprovado por infrequência.
+
 
 void relatorio_alunos() {
 
