@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include<locale.h>
 
 #define TAM 211
 
@@ -347,27 +346,34 @@ void exibir_tabela_hash(Aluno *tabela[]) {
 }
 
 
-//SORTS
-//Quick sort
+/*SORTS
+Quick sort*/
 
-void troca(int* a, int* b) {
-    int temp = *a;
-    *a = *b;
-    *b = temp;
+void troca(int vet[], int a, int b) {
+    int temp = vet[a];
+    vet[a] = vet[b];
+    vet[b] = temp;
 }
 
-int particiona(int vet[], int inicio, int fim) {
-    int pivo = vet[fim];
-    int indice = (inicio - 1);
-
-    for (int i = inicio; i <= fim - 1; i++) {
-        if (vet[i] < pivo) {
-            troca(&vet[i], &vet[i]);
-            indice++;
-        }
-    }
-    troca(&vet[indice + 1], &vet[fim]);
-    return (indice + 1);
+int particiona(int vet[], int inicio, int fim){
+	int pivo;
+    int indice;
+    int i;
+	
+	pivo = vet[fim]; 
+	indice = inicio;
+	
+	for(i = inicio; i < fim; i++){
+		if(vet[i] <= pivo)
+		{
+			troca(vet, i, indice);
+			indice++;
+		}
+	}
+	
+	troca(vet, indice, fim);
+	
+	return indice;
 }
 
 void quickSort(int vet[], int inicio, int fim) {
@@ -398,7 +404,8 @@ void print_ordenado(Aluno *tabela[]){
     for (int i = 0; i < cont; i++) {
         for (int j = 0; j < TAM; j++) {
             if (tabela[j] != NULL && tabela[j]->matricula == matriculas[i]) {
-                printf("Matrícula: %d, Nome: %s\n", tabela[j]->matricula, tabela[j]->nome);
+                printf("Matrícula: %d, Nome: %s, Curso: %s, Ingresso: %d\n", tabela[j]->matricula, tabela[j]->nome, 
+                tabela[j]->curso, tabela[j]->ingresso);
                 break;
             }
         }
