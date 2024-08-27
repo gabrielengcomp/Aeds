@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include<locale.h>
 
 #define TAM 211
 
@@ -98,6 +99,7 @@ int funcaoespalhamento(int chave) {
 
     return val;
 }
+
 void inserir_hash(Aluno *tabela[], int matricula, Aluno *endereco) {
     
     int i = 0;
@@ -344,76 +346,65 @@ void exibir_tabela_hash(Aluno *tabela[]) {
     printf("___________________________\n");
 }
 
-/*
-SORTS
 
-Aluno* MergeSort(Aluno *a, Aluno *b){
-    Aluno* resultado = NULL;
+//SORTS
+//Quick sort
 
-    if (a == NULL){
-        return (b);
-    }
-
-    else if (b == NULL){
-        return (a);
-    }
-
-    if (a->matricula <= b->matricula) {
-        resultado = a;
-        resultado->prox = MergeSort(a->prox, b);
-    }
-
-    else{
-        resultado = b;
-        resultado->prox = MergeSort(a, b->prox);
-    }
-
-    return (resultado);
+void troca(int* a, int* b) {
+    int temp = *a;
+    *a = *b;
+    *b = temp;
 }
 
-void DivideLista(Aluno* aluno, Aluno** frontRef, Aluno** backRef){
-    Aluno* p2; //pula 2
-    Aluno* p1; // pula 1
-    p1 = aluno;
-    p2 = aluno->prox;
+int particiona(int vet[], int inicio, int fim) {
+    int pivo = vet[fim];
+    int indice = (inicio - 1);
 
-    while (p2 != NULL) {
-        p2 = p2->prox;
-        if (p2 != NULL) {
-            p1 = p1->prox;
-            p2 = p2->prox;
+    for (int i = inicio; i <= fim - 1; i++) {
+        if (vet[i] < pivo) {
+            troca(&vet[i], &vet[i]);
+            indice++;
+        }
+    }
+    troca(&vet[indice + 1], &vet[fim]);
+    return (indice + 1);
+}
+
+void quickSort(int vet[], int inicio, int fim) {
+    if (inicio < fim) {
+
+        int pivo = particiona(vet, inicio, fim);
+        
+        quickSort(vet, inicio, pivo - 1);
+        quickSort(vet, pivo + 1, fim);
+    }
+}
+
+void print_ordenado(Aluno *tabela[]){
+    
+    int matriculas[TAM];
+    int cont = 0;
+
+    for (int i = 0; i < TAM; i++) {
+        if (tabela[i] != NULL) {
+            matriculas[cont] = tabela[i]->matricula;
+            cont++;
         }
     }
 
-    *frontRef = aluno;
-    *backRef = p1->prox;
-    p1->prox = NULL;
-}
+    quickSort(matriculas, 0, cont - 1);
 
-void Merge(Aluno** lista){
-     Aluno *x = *lista;
-     Aluno *a;
-     Aluno *b;
-
-    if ((x == NULL) || (x->prox == NULL)) {
-        return;
+    printf("Alunos em ordem crescente de matrícula:\n");
+    for (int i = 0; i < cont; i++) {
+        for (int j = 0; j < TAM; j++) {
+            if (tabela[j] != NULL && tabela[j]->matricula == matriculas[i]) {
+                printf("Matrícula: %d, Nome: %s\n", tabela[j]->matricula, tabela[j]->nome);
+                break;
+            }
+        }
     }
 
-    DivideLista(x, &a, &b);
-    Merge(&a);
-    Merge(&b);
-
-    *lista = MergeSort(a, b);
 }
-
-void PrintaLista(Aluno *aluno){
-    while (aluno != NULL) {
-        printf("%d ", aluno->matricula);
-        aluno = aluno->prox;
-    }
-}
-*/
-
 
 void menu() {
     printf("\n___________________________\n");
@@ -424,6 +415,7 @@ void menu() {
     printf("[5] Relatório de notas\n");
     printf("[6] Exibir Lista de Alunos\n");
     printf("[7] Exibir Tabela Hash\n");
+    printf("[8] Exibir alunos ordenados pela matricula\n");
     printf("[0] Sair\n");
     printf("___________________________\n");
 }
@@ -437,7 +429,7 @@ int main() {
     int opc = 0;
 
     printf("\nTRABALHO DE ALGORITMOS E ESTRUTURAS DE DADOS\n");
-    printf("\nALUNOS: AUGUSTO FREITAS, GABRIEL HENRIQUE PIRES, VICENTE ZANATTA\n");
+    printf("\nALUNOS: AUGUSTO FREITAS, GABRIEL HENRIQUE pivoRES, VICENTE ZANATTA\n");
     printf("SEMESTRE: 24.1\n");
 
     while (1) {
@@ -472,6 +464,10 @@ int main() {
 
             case 7:
                 exibir_tabela_hash(tabela);
+                break;
+            
+            case 8:
+                print_ordenado(tabela);
                 break;
             
             case 0:
