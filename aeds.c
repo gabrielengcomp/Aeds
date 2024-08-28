@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+//#include "sorts.h"
 
 #define TAM 211
 
@@ -11,8 +12,8 @@ typedef struct avaliacoes {
 
 /*typedef struct lista_de_avaliacoes {
     Avaliacao *cabeca;
-} Lista_notas;*/
-
+} Lista_notas;
+*/
 typedef struct aluno {
     int matricula;
     char nome[30];
@@ -347,25 +348,26 @@ void exibir_tabela_hash(Aluno *tabela[]) {
 
 
 /*SORTS
-Quick sort*/
-
+Quick sort
+*/
 void troca(int vet[], int a, int b) {
     int temp = vet[a];
     vet[a] = vet[b];
     vet[b] = temp;
 }
 
+void troca_aluno(Aluno* vet[], int i, int j) {
+    Aluno* temp = vet[i];
+    vet[i] = vet[j];
+    vet[j] = temp;
+}
+
 int particiona(int vet[], int inicio, int fim){
-	int pivo;
-    int indice;
-    int i;
+	int pivo = vet[fim]; ;
+    int indice = inicio;
 	
-	pivo = vet[fim]; 
-	indice = inicio;
-	
-	for(i = inicio; i < fim; i++){
-		if(vet[i] <= pivo)
-		{
+	for(int i = inicio; i < fim; i++){
+		if(vet[i] <= pivo){
 			troca(vet, i, indice);
 			indice++;
 		}
@@ -374,6 +376,22 @@ int particiona(int vet[], int inicio, int fim){
 	troca(vet, indice, fim);
 	
 	return indice;
+}
+
+int particiona_nome(Aluno* vet[], int inicio, int fim) {
+    Aluno* pivo = vet[fim];
+    int indice = inicio;
+    
+    for (int i = inicio; i < fim; i++) {
+        if (strcmp(vet[i]->nome, pivo->nome) < 0) {
+            troca_aluno(vet, i, indice);
+            indice++;
+        }
+    }
+
+    troca_aluno(vet, indice, fim);
+    
+    return indice;
 }
 
 void quickSort(int vet[], int inicio, int fim) {
@@ -386,31 +404,65 @@ void quickSort(int vet[], int inicio, int fim) {
     }
 }
 
-void print_ordenado(Aluno *tabela[]){
+void quickSortNome(Aluno* vet[], int inicio, int fim) {
+    if (inicio < fim) {
+
+        int pivo = particiona_nome(vet, inicio, fim);
+        
+        quickSortNome(vet, inicio, pivo - 1);
+        quickSortNome(vet, pivo + 1, fim);
+    }
+}
+
+void print_ordenado(Aluno *tabela[], int tipo){
     
-    int matriculas[TAM];
+    Aluno* vetNomes[TAM];
+    int vet[TAM];
     int cont = 0;
 
     for (int i = 0; i < TAM; i++) {
         if (tabela[i] != NULL) {
-            matriculas[cont] = tabela[i]->matricula;
+            if (tipo == 1){
+            vet[cont] = tabela[i]->matricula;
             cont++;
-        }
-    }
+            }
 
-    quickSort(matriculas, 0, cont - 1);
-
-    printf("Alunos em ordem crescente de matrícula:\n");
-    for (int i = 0; i < cont; i++) {
-        for (int j = 0; j < TAM; j++) {
-            if (tabela[j] != NULL && tabela[j]->matricula == matriculas[i]) {
-                printf("Matrícula: %d, Nome: %s, Curso: %s, Ingresso: %d\n", tabela[j]->matricula, tabela[j]->nome, 
-                tabela[j]->curso, tabela[j]->ingresso);
-                break;
+            else if (tipo == 2){
+            //somatorio das notas
+            }
+            else if (tipo == 3){
+            vetNomes[cont] = tabela[i];
+            cont++;
             }
         }
     }
 
+    // Ordenação por matrícula
+    if (tipo == 1) {
+        quickSort(vet, 0, cont - 1);
+        printf("Alunos em ordem crescente de matrícula:\n");
+        for (int i = 0; i < cont; i++) {
+            for (int j = 0; j < TAM; j++) {
+                if (tabela[j] != NULL && tabela[j]->matricula == vet[i]) {
+                    printf("Matrícula: %d, Nome: %s, Curso: %s, Ingresso: %d\n", 
+                            tabela[j]->matricula, tabela[j]->nome, 
+                            tabela[j]->curso, tabela[j]->ingresso);
+                    break;
+                }
+            }
+        }
+    }
+
+    // Ordenação por nome
+    else if (tipo == 3) {
+        quickSortNome(vetNomes, 0, cont - 1);
+        printf("Alunos em ordem alfabética:\n");
+        for (int i = 0; i < cont; i++) {
+            printf("Matrícula: %d, Nome: %s, Curso: %s, Ingresso: %d\n", 
+                    vetNomes[i]->matricula, vetNomes[i]->nome, 
+                    vetNomes[i]->curso, vetNomes[i]->ingresso);
+        }
+    }
 }
 
 void menu() {
@@ -434,6 +486,7 @@ int main() {
 
     Aluno *tabela[TAM] = {NULL};
     int opc = 0;
+    int opord = 0;
 
     printf("\nTRABALHO DE ALGORITMOS E ESTRUTURAS DE DADOS\n");
     printf("\nALUNOS: AUGUSTO FREITAS, GABRIEL HENRIQUE pivoRES, VICENTE ZANATTA\n");
@@ -474,7 +527,29 @@ int main() {
                 break;
             
             case 8:
-                print_ordenado(tabela);
+
+                printf("como deseja realizar a ordenação?\n"
+                "[1] Por matricula\n"
+                "[2] Por somatorio das notas\n"
+                "[3] Por ordem alfabética\n");
+                scanf("%d",&opord);
+               
+                switch (opord){
+                    case 1:
+                        print_ordenado(tabela, opord);
+                        break;
+                    case 2:
+                        print_ordenado(tabela, opord);
+                        break;
+                    case 3:
+                        print_ordenado(tabela, opord);
+                        break;
+                    
+                    default:
+                        printf("Opção Inválida\n");
+                        break;
+                }
+                
                 break;
             
             case 0:
