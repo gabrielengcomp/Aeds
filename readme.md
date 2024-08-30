@@ -36,20 +36,19 @@ typedef struct lista {
 ```
 
 ## *HASH*
-❌precisa de revisão❌
 Sempre que um aluno é cadastrado, ao preencher o número da matrícula de tal, ele automaticamente é adicionada a um campo da tabela hash. A tabela Hash recebe uma lista encadeada contendo as informações dos alunos e armazena-as em cada setor de um vetor. Para armazenar os alunos, a função "inserir_hash" faze o papel de inserir os alunos em seu determinado campo da tabela e para evitar colisões, a função "espalhamento" ajuda a separar alunos com números de matrículas muito parecidos ou próximos uns dos outros.
  ```
-int funcaoespalhamento(int chave){
+int funcaoespalhamento(int chave) {
 
     int val = 0;
-
-    val = ((chave % TAM) + (3,1415926*(chave-TAM)))%TAM;
-    printf("%i", val);
+    long int a = ((3^10)*20);
+    val = (a*(a + chave^3))%TAM;
+    printf("%i\n", val);
 
     return val;
 }
 
-void inserir_hash(Aluno *tabela[], int matricula, Aluno *endereco){
+void inserir_hash(Aluno *tabela[], int matricula, Aluno *endereco) {
     
     int i = 0;
     int id = 0;
@@ -65,7 +64,8 @@ void inserir_hash(Aluno *tabela[], int matricula, Aluno *endereco){
     tabela[id] = endereco;
 }
 
-Aluno* buscarHash (Aluno *tabela[], int matricula){
+Aluno* buscarHash (Aluno *tabela[], int matricula)
+{
     int ind;
 
     ind = funcaoespalhamento(matricula);
