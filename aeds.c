@@ -222,35 +222,45 @@ void inserir_avl (Aluno *no, float notaMax)
 
 
 void cadastrar_avaliacao(Lista_alunos *Lista) {
-
     float notaMax = 0;
 
     printf("___________________________");
     printf("\nCADASTRO DE AVALIACOES (PARA VOLTAR DIGITE 0): ");
 
-    while(1)
-    {
+    while (1) {
         Aluno *no = Lista->cabeca;
+
         printf("\nNota Maxima: ");
         scanf("%f", &notaMax);
 
-        if(notaMax <= 0)
+        if (notaMax <= 0) {
             break;
-        else
-        {
-            while(no != NULL)
-            {
-                inserir_avl(&no, notaMax);
-                printf("\na");
+        } else {
+            // Loop para percorrer todos os alunos
+            int todos_avaliados = 1; // Flag para verificar se todos os alunos foram avaliados
+
+            while (no != NULL) {
+                inserir_avl(no, notaMax);
                 no = no->prox;
+            }
+
+            no = Lista->cabeca; // Reinicia o ponteiro para verificar se todos os alunos foram avaliados
+
+            // Verifica se todos os alunos foram avaliados
+            while (no != NULL) {
+                if (no->avaliacao == NULL) {
+                    todos_avaliados = 0; // Se encontrar algum aluno sem avaliação, a flag é definida como 0
+                    break;
+                }
+                no = no->prox;
+            }
+
+            if (todos_avaliados) {
+                break; // Sai do loop se todos os alunos já tiverem uma avaliação
             }
         }
     }
-
-
-
-
-}// recebe uma avaliação e o seu valor total. Em seguida, solicita a nota de cada aluno
+}
 
 
 int verificar_frequencia (Aluno *aluno) //returna quantas faltas um aluno tem  
@@ -271,14 +281,14 @@ void realizar_chamada(Lista_alunos *lista) {
     
     Aluno *no = lista->cabeca;
 
-    printf("\nREALIZANDO CHAMADA\n");
+    printf("\nREALIZANDO CHAMADA\n0 para presente\n1 para ausente\n");
 
     while(no != NULL)
     {
         printf("%s | %i: ", no->nome, no->matricula);
         scanf("%i", &no->frequencia[no->aula]);
         no->aula++;
-        if (verificar_frequencia(no) > 18)
+        if (verificar_frequencia(no) > 10)
         {
             printf("\n!! ALUNO REPROVADO POR FREQUENCIA !!\n");
         }
