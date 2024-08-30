@@ -192,6 +192,7 @@ void inserir_avl (Aluno *no, float notaMax)
     Avaliacoes *avl;
     Avaliacoes *aux;
     
+    printf("\n %s\n", no->nome);
     printf("\n%i | NOTA: " ,no->matricula);
     scanf("%2f", &nota);
 
@@ -222,17 +223,14 @@ void inserir_avl (Aluno *no, float notaMax)
 
 void cadastrar_avaliacao(Lista_alunos *Lista) {
 
-    float nota = 0;
     float notaMax = 0;
-    int cond = 1;
-    Aluno *no = Lista->cabeca;
-    Aluno *aux;
 
     printf("___________________________");
     printf("\nCADASTRO DE AVALIACOES (PARA VOLTAR DIGITE 0): ");
 
     while(1)
     {
+        Aluno *no = Lista->cabeca;
         printf("\nNota Maxima: ");
         scanf("%f", &notaMax);
 
