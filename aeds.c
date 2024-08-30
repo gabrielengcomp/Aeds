@@ -7,6 +7,7 @@
 
 typedef struct avaliacoes {
     float notas;
+    float nMax;
     struct avaliacoes *prox;
 } Avaliacoes;
 
@@ -185,85 +186,74 @@ void cadastrar_aluno(Lista_alunos *lista, Aluno *tabela[]) {
 
 }// solicita os dados para o cadastro de um aluno e, se já existem avaliações no sistema, pede as notas contabilizadas. Se já existem chamadas realizadas no sistema, solicita também a presença do aluno em cada um dos dias
 
-void cadastrar_avaliacao(Aluno **tabela) {
-
+void inserir_avl (Aluno *no, float notaMax)
+{
     float nota = 0;
-    int matricula = 0;
-    int id = 0;
-    int cond = 1;
-    Aluno *no;
     Avaliacoes *avl;
     Avaliacoes *aux;
+    
+    printf("\n%i | NOTA: " ,no->matricula);
+    scanf("%2f", &nota);
+
+    if(nota >= 0)
+    {
+        avl = malloc(sizeof(Avaliacoes));
+        if(avl == NULL)
+        {
+            printf("\n!!!ERRO AO ALOCAR MEMORIA!!!");
+            return;
+        }
+          
+        avl->nMax = notaMax;
+        avl->notas = nota;
+        avl->prox = NULL;
+        if(no->avaliacao == NULL)
+             no->avaliacao = avl;  
+        else
+        {
+            aux = no->avaliacao;
+            while(aux->prox != NULL)
+                aux = aux->prox;
+             aux = avl;
+        }
+    }
+}
+
+
+void cadastrar_avaliacao(Lista_alunos *Lista) {
+
+    float nota = 0;
+    float notaMax = 0;
+    int cond = 1;
+    Aluno *no = Lista->cabeca;
+    Aluno *aux;
 
     printf("___________________________");
     printf("\nCADASTRO DE AVALIACOES (PARA VOLTAR DIGITE 0): ");
 
     while(1)
     {
-        cond = 1;
-        printf("\nMatricula: ");
-        scanf("%i", &matricula);
+        printf("\nNota Maxima: ");
+        scanf("%f", &notaMax);
 
-        if(matricula == 0)
+        if(notaMax <= 0)
             break;
         else
         {
-            id = funcaoespalhamento(matricula);
-
-            if(tabela[id] == NULL)
+            while(no != NULL)
             {
-                printf("\nMATRICULA NAO ENCONTRADA\n");
-                cond = 0;
+                inserir_avl(&no, notaMax);
+                printf("\na");
+                no = no->prox;
             }
-            else
-            {
-                no = tabela[id];
-            }
-
-            while(cond)
-            {
-                printf("\nNOTA: ");
-                scanf("%2f", &nota);
-                cond = (nota == -1) ? 0 : 1;
-
-                printf("\na\n");
-                if(nota >= 0)
-                {
-                    avl = malloc(sizeof(Avaliacoes));
-                    
-                    avl->notas = nota;
-                    avl->prox = NULL;
-                    printf("\nb\n");
-                    if(no->avaliacao == NULL)
-                    {
-                      no->avaliacao = avl;  
-                    }
-                    else
-                    {
-                        aux = no->avaliacao;
-                        printf("\nd");
-                        while(aux->prox != NULL)
-                            printf("\nc\n");
-                            aux = aux->prox;
-                        
-                        aux = avl;
-                        printf("\ne");
-                    }
-                    printf("\nf");
-                }
-                printf("\ng");
-
-            }
-            printf("\nh");
         }
-        printf("\ni");
-
     }
 
 
 
 
 }// recebe uma avaliação e o seu valor total. Em seguida, solicita a nota de cada aluno
+
 
 int verificar_frequencia (Aluno *aluno) //returna quantas faltas um aluno tem  
 {
@@ -283,7 +273,7 @@ void realizar_chamada(Lista_alunos *lista) {
     
     Aluno *no = lista->cabeca;
 
-    printf("\nREALIZANDO CHAMDA\n");
+    printf("\nREALIZANDO CHAMADA\n");
 
     while(no != NULL)
     {
@@ -503,7 +493,7 @@ int main() {
                 break;
 
             case 2:
-                cadastrar_avaliacao(tabela);
+                cadastrar_avaliacao(&Lista_de_alunos);
                 break;
 
             case 3:
