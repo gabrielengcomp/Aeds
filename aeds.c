@@ -111,7 +111,7 @@ void inserir_hash(Aluno *tabela[], int matricula, Aluno *endereco) {
     while (tabela[id] != NULL) {
         
         id = (id + i) % TAM;
-        printf("\nid) %i\n", id);
+        //printf("\nid) %i\n", id);
         i++;
     }
     tabela[id] = endereco;
@@ -487,7 +487,7 @@ int main() {
     int opord = 0;
 
     printf("\nTRABALHO DE ALGORITMOS E ESTRUTURAS DE DADOS\n");
-    printf("\nALUNOS: AUGUSTO FREITAS, GABRIEL HENRIQUE pivoRES, VICENTE ZANATTA\n");
+    printf("\nALUNOS: AUGUSTO FREITAS, GABRIEL HENRIQUE PIRES, VICENTE ZANATTA\n");
     printf("SEMESTRE: 24.1\n");
 
     while (1) {
