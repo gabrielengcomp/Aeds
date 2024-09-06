@@ -11,10 +11,6 @@ typedef struct avaliacoes {
     struct avaliacoes *prox;
 } Avaliacoes;
 
-/*typedef struct lista_de_avaliacoes {
-    Avaliacao *cabeca;
-} Lista_notas;
-*/
 typedef struct aluno {
     int matricula;
     char nome[30];
@@ -279,13 +275,9 @@ void realizar_chamada(Lista_alunos *lista) {
 }// contabiliza a frequência dos alunos em um determinado dia, perguntando quem está presente e ausente. Assim que um aluno atingir 10 faltas, deve imprimir um aviso dizendo que o mesmo foi reprovado por infrequência.
 
 
-void relatorio_alunos() {
+// Imprime a lista de alunos informando a matrícula, nome, soma de todas as notas já registradas e o número de faltas. Além disso, antes de imprimir o relatório dá a opção de ordenar a lista por um destes campos.
 
-}// Imprime a lista de alunos informando a matrícula, nome, soma de todas as notas já registradas e o número de faltas. Além disso, antes de imprimir o relatório dá a opção de ordenar a lista por um destes campos.
-
-void relatorio_notas() {
-
-}// Imprime o relatório de notas de uma determinada avaliação informando a nota máxima, mínima e média. Após isso, imprime todas as notas em ordem decrescente sem indicar o nome dos alunos
+// Imprime o relatório de notas de uma determinada avaliação informando a nota máxima, mínima e média. Após isso, imprime todas as notas em ordem decrescente sem indicar o nome dos alunos
 
 void exibir_lista(Lista_alunos *lista) {
     Aluno *no = lista->cabeca;
@@ -324,9 +316,6 @@ void exibir_tabela_hash(Aluno *tabela[]) {
 }
 
 
-/*SORTS
-Quick sort
-*/
 void troca(int vet[], int a, int b) {
     int temp = vet[a];
     vet[a] = vet[b];
@@ -337,6 +326,17 @@ void troca_aluno(Aluno* vet[], int i, int j) {
     Aluno* temp = vet[i];
     vet[i] = vet[j];
     vet[j] = temp;
+}
+
+void troca_somatorio(Aluno* vetAlunos[], float vetSomatorio[], int i, int j) {
+    float tempSomatorio = vetSomatorio[i];
+    Aluno* tempAluno = vetAlunos[i];
+    
+    vetSomatorio[i] = vetSomatorio[j];
+    vetAlunos[i] = vetAlunos[j];
+    
+    vetSomatorio[j] = tempSomatorio;
+    vetAlunos[j] = tempAluno;
 }
 
 int particiona(int vet[], int inicio, int fim){
@@ -371,13 +371,29 @@ int particiona_nome(Aluno* vet[], int inicio, int fim) {
     return indice;
 }
 
-void quickSort(int vet[], int inicio, int fim) {
+int particiona_somatorio(float vetSomatorio[], Aluno* vetAlunos[], int inicio, int fim) {
+    float pivo = vetSomatorio[fim];
+    int indice = inicio;
+
+    for (int i = inicio; i < fim; i++) {
+        if (vetSomatorio[i] <= pivo) {
+            troca_somatorio(vetAlunos, vetSomatorio, i, indice);
+            indice++;
+        }
+    }
+
+    troca_somatorio(vetAlunos, vetSomatorio, indice, fim);
+    return indice;
+}
+
+
+void quickSortMatricula(int vet[], int inicio, int fim) {
     if (inicio < fim) {
 
         int pivo = particiona(vet, inicio, fim);
         
-        quickSort(vet, inicio, pivo - 1);
-        quickSort(vet, pivo + 1, fim);
+        quickSortMatricula(vet, inicio, pivo - 1);
+        quickSortMatricula(vet, pivo + 1, fim);
     }
 }
 
@@ -391,55 +407,163 @@ void quickSortNome(Aluno* vet[], int inicio, int fim) {
     }
 }
 
+void quickSortSomatorio(float vetSomatorio[], Aluno* vetAlunos[], int inicio, int fim) {
+    if (inicio < fim) {
+        int pivo = particiona_somatorio(vetSomatorio, vetAlunos, inicio, fim);
+        quickSortSomatorio(vetSomatorio, vetAlunos, inicio, pivo - 1);
+        quickSortSomatorio(vetSomatorio, vetAlunos, pivo + 1, fim);
+    }
+}
+
+float somatorionotas(Avaliacoes *avaliacao) {
+    float soma = 0;
+    Avaliacoes *atual = avaliacao;
+    while (atual != NULL) {
+        soma += atual->notas;
+        atual = atual->prox;
+    }
+    return soma;
+}
+
 void print_ordenado(Aluno *tabela[], int tipo){
-    
     Aluno* vetNomes[TAM];
+    float vetSomatorio[TAM];
     int vet[TAM];
     int cont = 0;
-
     for (int i = 0; i < TAM; i++) {
         if (tabela[i] != NULL) {
             if (tipo == 1){
-            vet[cont] = tabela[i]->matricula;
-            cont++;
+                vet[cont] = tabela[i]->matricula;
+                cont++;
             }
-
             else if (tipo == 2){
-            //somatorio das notas
+                vetNomes[cont] = tabela[i];
+                vetSomatorio[cont] = somatorionotas(tabela[i]->avaliacao);
+                cont++;
             }
             else if (tipo == 3){
-            vetNomes[cont] = tabela[i];
-            cont++;
+                vetNomes[cont] = tabela[i];
+                cont++;
             }
         }
     }
-
     // Ordenação por matrícula
     if (tipo == 1) {
-        quickSort(vet, 0, cont - 1);
+        quickSortMatricula(vet, 0, cont - 1);
         printf("Alunos em ordem crescente de matrícula:\n");
         for (int i = 0; i < cont; i++) {
             for (int j = 0; j < TAM; j++) {
                 if (tabela[j] != NULL && tabela[j]->matricula == vet[i]) {
-                    printf("|Matrícula: %d| Nome| %s| Curso: %s| Ingresso: %d|\n", 
-                            tabela[j]->matricula, tabela[j]->nome, 
-                            tabela[j]->curso, tabela[j]->ingresso);
-                    break;
-                }
+                    printf("Matrícula: %d, Nome: %s, Curso: %s, Ingresso: %d\n", tabela[j]->matricula, tabela[j]->nome, tabela[j]->curso, tabela[j]->ingresso);
+                }   
             }
         }
     }
-
+    //ordenação por nota
+    if (tipo == 2){
+        quickSortSomatorio(vetSomatorio, vetNomes, 0, cont - 1);
+        printf("Alunos em ordem decrescente de somatório das notas:\n");
+        for (int i = cont - 1; i >= 0; i--) {
+            printf("Matrícula: %d, Nome: %s, Somatório das Notas: %.2f\n", vetNomes[i]->matricula,vetNomes[i]->nome, vetSomatorio[i]);
+        }
+    }
     // Ordenação por nome
     else if (tipo == 3) {
         quickSortNome(vetNomes, 0, cont - 1);
         printf("Alunos em ordem alfabética:\n");
         for (int i = 0; i < cont; i++) {
-            printf("Matrícula: %d, Nome: %s, Curso: %s, Ingresso: %d\n", 
-                    vetNomes[i]->matricula, vetNomes[i]->nome, 
-                    vetNomes[i]->curso, vetNomes[i]->ingresso);
+            printf("Matrícula: %d, Nome: %s, Curso: %s, Ingresso: %d\n", vetNomes[i]->matricula, vetNomes[i]->nome, vetNomes[i]->curso, vetNomes[i]->ingresso);
         }
     }
+}
+
+void relatorio_notas(Lista_alunos *lista) {
+    if (lista->cabeca == NULL) {
+        printf("Nenhum aluno cadastrado.\n");
+        return;
+    }
+
+    Aluno *aluno = lista->cabeca;
+    float maxNota = -1.0, minNota = 101.0, soma = 0.0;
+    int totalNotas = 0;
+    
+    // Array para armazenar as notas para ordenação
+    float notasOrdenadas[TAM];
+    
+    // Percorre a lista de alunos para obter as notas
+    while (aluno != NULL) {
+        Avaliacoes *avaliacao = aluno->avaliacao;
+        while (avaliacao != NULL) {
+            float nota = avaliacao->notas;
+            if (nota > maxNota) {
+                maxNota = nota;
+            }
+            if (nota < minNota) {
+                minNota = nota;
+            }
+            soma += nota;
+            notasOrdenadas[totalNotas] = nota;
+            totalNotas++;
+            avaliacao = avaliacao->prox;
+        }
+        aluno = aluno->prox;
+    }
+    
+    if (totalNotas == 0) {
+        printf("Nenhuma avaliação registrada.\n");
+        return;
+    }
+    
+    // Calcula a média
+    float media = soma / totalNotas;
+
+    // Exibe os resultados
+    printf("\nRelatório de Notas:\n");
+    printf("Nota máxima: %.2f\n", maxNota);
+    printf("Nota mínima: %.2f\n", minNota);
+    printf("Média das notas: %.2f\n", media);
+
+    // Ordena as notas em ordem decrescente (utilizando bubble sort como exemplo)
+    for (int i = 0; i < totalNotas - 1; i++) {
+        for (int j = 0; j < totalNotas - i - 1; j++) {
+            if (notasOrdenadas[j] < notasOrdenadas[j + 1]) {
+                float temp = notasOrdenadas[j];
+                notasOrdenadas[j] = notasOrdenadas[j + 1];
+                notasOrdenadas[j + 1] = temp;
+            }
+        }
+    }
+
+    // Exibe as notas em ordem decrescente
+    printf("\nNotas em ordem decrescente:\n");
+    for (int i = 0; i < totalNotas; i++) {
+        printf("%.2f\n", notasOrdenadas[i]);
+    }
+}
+
+void relatorio_alunos(Aluno *tabela[]) {
+    int op;
+    printf("como deseja realizar a ordenação?\n"
+    "[1] Por matricula\n"
+    "[2] Por somatorio das notas\n"
+    "[3] Por ordem alfabética\n");
+    scanf("%d",&op);
+
+    switch (op){
+        case 1:
+            print_ordenado(tabela, op);
+            break;
+        case 2:
+            print_ordenado(tabela, op);
+            break;
+        case 3:
+            print_ordenado(tabela, op);
+            break; 
+        default:
+            printf("Opção Inválida\n");
+            break;
+    }
+
 }
 
 void menu() {
@@ -489,11 +613,11 @@ int main() {
                 break;
 
             case 4:
-                relatorio_alunos();
+                relatorio_alunos(tabela);
                 break;
 
             case 5:
-                relatorio_notas();
+                relatorio_notas(&Lista_de_alunos);
                 break;
             
             case 6:
@@ -503,33 +627,6 @@ int main() {
             case 7:
                 exibir_tabela_hash(tabela);
                 break;
-            
-            case 8:
-
-                printf("como deseja realizar a ordenação?\n"
-                "[1] Por matricula\n"
-                "[2] Por somatorio das notas\n"
-                "[3] Por ordem alfabética\n");
-                scanf("%d",&opord);
-               
-                switch (opord){
-                    case 1:
-                        print_ordenado(tabela, opord);
-                        break;
-                    case 2:
-                        print_ordenado(tabela, opord);
-                        break;
-                    case 3:
-                        print_ordenado(tabela, opord);
-                        break;
-                    
-                    default:
-                        printf("Opção Inválida\n");
-                        break;
-                }
-                
-                break;
-            
             case 0:
                 return 0;
 
