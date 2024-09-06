@@ -184,14 +184,13 @@ void cadastrar_aluno(Lista_alunos *lista, Aluno *tabela[]) {
 
 }// solicita os dados para o cadastro de um aluno e, se já existem avaliações no sistema, pede as notas contabilizadas. Se já existem chamadas realizadas no sistema, solicita também a presença do aluno em cada um dos dias
 
-void inserir_avl (Aluno *no, float notaMax)
+void inserir_avl (Aluno *no, float notaMax) //recebe o nó do aluno, a nota maxima, cria a avaliação e add na lista de avaliações do aluno
 {
     float nota = 0;
     Avaliacoes *avl;
     Avaliacoes *aux;
     
-    printf("\n %s\n", no->nome);
-    printf("\n%i | NOTA: " ,no->matricula);
+    printf("\n %s| %i | NOTA: ", no->nome, no->matricula);
     scanf("%2f", &nota);
 
     if(nota >= 0)
@@ -206,59 +205,41 @@ void inserir_avl (Aluno *no, float notaMax)
         avl->nMax = notaMax;
         avl->notas = nota;
         avl->prox = NULL;
-        if(no->avaliacao == NULL)
-             no->avaliacao = avl;  
+        if(no->avaliacao == NULL) //caso lista vazia
+            no->avaliacao = avl;  
         else
         {
             aux = no->avaliacao;
-            while(aux->prox != NULL)
+            while(aux->prox != NULL) //percorre a lista até achar o ultimo nó
                 aux = aux->prox;
              aux = avl;
+             free(aux);
         }
     }
 }
 
 
-void cadastrar_avaliacao(Lista_alunos *Lista) {
+void cadastrar_avaliacao(Lista_alunos *Lista) 
+{
     float notaMax = 0;
 
     printf("___________________________");
     printf("\nCADASTRO DE AVALIACOES (PARA VOLTAR DIGITE 0): ");
 
-    while (1) {
-        Aluno *no = Lista->cabeca;
+    Aluno *no = Lista->cabeca;
 
-        printf("\nNota Maxima: ");
-        scanf("%f", &notaMax);
+    printf("\nNota Maxima: ");
+    scanf("%f", &notaMax);
 
-        if (notaMax <= 0) {
-            break;
-        } else {
-            // Loop para percorrer todos os alunos
-            int todos_avaliados = 1; // Flag para verificar se todos os alunos foram avaliados
-
-            while (no != NULL) {
-                inserir_avl(no, notaMax);
-                no = no->prox;
-            }
-
-            no = Lista->cabeca; // Reinicia o ponteiro para verificar se todos os alunos foram avaliados
-
-            // Verifica se todos os alunos foram avaliados
-            while (no != NULL) {
-                if (no->avaliacao == NULL) {
-                    todos_avaliados = 0; // Se encontrar algum aluno sem avaliação, a flag é definida como 0
-                    break;
-                }
-                no = no->prox;
-            }
-
-            if (todos_avaliados) {
-                break; // Sai do loop se todos os alunos já tiverem uma avaliação
-            }
-        }
+    if (notaMax <= 0) //saida opcional da função
+        return;
+    while (no != NULL) //loop para percorrer a lista de alunos 
+    {
+        inserir_avl(no, notaMax); // linha 187
+        no = no->prox;
     }
 }
+
 
 
 int verificar_frequencia (Aluno *aluno) //returna quantas faltas um aluno tem  
@@ -440,7 +421,7 @@ void print_ordenado(Aluno *tabela[], int tipo){
         for (int i = 0; i < cont; i++) {
             for (int j = 0; j < TAM; j++) {
                 if (tabela[j] != NULL && tabela[j]->matricula == vet[i]) {
-                    printf("Matrícula: %d, Nome: %s, Curso: %s, Ingresso: %d\n", 
+                    printf("|Matrícula: %d| Nome| %s| Curso: %s| Ingresso: %d|\n", 
                             tabela[j]->matricula, tabela[j]->nome, 
                             tabela[j]->curso, tabela[j]->ingresso);
                     break;
@@ -470,7 +451,7 @@ void menu() {
     printf("[5] Relatório de notas\n");
     printf("[6] Exibir Lista de Alunos\n");
     printf("[7] Exibir Tabela Hash\n");
-    printf("[8] Exibir alunos ordenados pela matricula\n");
+    printf("[8] Ordenar Alunos\n");
     printf("[0] Sair\n");
     printf("___________________________\n");
 }
