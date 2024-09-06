@@ -21,13 +21,13 @@ typedef struct aluno {
     char curso[20];
     int ingresso;
     int frequencia[18];
-    int aula;
     Avaliacoes *avaliacao; // lista de tamanho variável, aumenta com o cadastro de avaliações 
     struct aluno *prox;
 } Aluno;
 
 typedef struct lista {
     Aluno *cabeca;
+    int aula;
 } Lista_alunos;
 
 Aluno *acessa(Lista_alunos *L, int i) {
@@ -172,16 +172,14 @@ void cadastrar_aluno(Lista_alunos *lista, Aluno *tabela[]) {
         return;
     }
 
+    for(int i = 0; i <= lista->aula; i++)
+        no->frequencia[i] = -1;
+
     notas = NULL;
-    no->aula = 0;
 
     inserir_aluno(no, lista);
 
     printf("\nCADASTRO REALIZADO COM SUCESSO\n");
-    printf("\nMATRICULA: %d\n", no->matricula);
-    printf("NOME: %s\n", no->nome);
-    printf("CURSO: %s\n", no->curso);
-    printf("INGRESSO: %i\n", no->ingresso);
     printf("\n___________________________\n");
 
 }// solicita os dados para o cadastro de um aluno e, se já existem avaliações no sistema, pede as notas contabilizadas. Se já existem chamadas realizadas no sistema, solicita também a presença do aluno em cada um dos dias
@@ -280,15 +278,15 @@ int verificar_frequencia (Aluno *aluno) //returna quantas faltas um aluno tem
 void realizar_chamada(Lista_alunos *lista) {
     
     Aluno *no = lista->cabeca;
+    lista->aula++;
 
     printf("\nREALIZANDO CHAMADA\n0 para presente\n1 para ausente\n");
 
     while(no != NULL)
     {
         printf("%s | %i: ", no->nome, no->matricula);
-        scanf("%i", &no->frequencia[no->aula]);
-        no->aula++;
-        if (verificar_frequencia(no) > 10)
+        scanf("%i", &no->frequencia[lista->aula]);
+        if (verificar_frequencia(no) >= 10)
         {
             printf("\n!! ALUNO REPROVADO POR FREQUENCIA !!\n");
         }
@@ -481,6 +479,7 @@ int main() {
 
     Lista_alunos Lista_de_alunos;
     Lista_de_alunos.cabeca = NULL;
+    Lista_de_alunos.aula = 0;
 
     Aluno *tabela[TAM] = {NULL};
     int opc = 0;
