@@ -36,7 +36,8 @@ Aluno *acessa(Lista_alunos *L, int i) {
     return aluno;
 }// acessa a matrícula do aluno referente a matrícula armazenada na lista encadeada
 
-void excluir_aluno(Lista_alunos *L, int matricula) {
+void excluir_aluno(Lista_alunos *L, int matricula) //desconsiderar 
+{
     Aluno *atual = L->cabeca;
     Aluno *anterior = NULL;
 
@@ -65,7 +66,8 @@ void excluir_aluno(Lista_alunos *L, int matricula) {
     printf("Aluno com matrícula %d excluído com sucesso.\n", matricula);
 }
 
-Aluno *busca(Lista_alunos *L, int x) {
+Aluno *busca(Lista_alunos *L, int x) //busca aluno na lista encadeada
+{
     Aluno *aluno = L->cabeca;
     while (aluno != NULL && aluno->matricula != x) {
         aluno = aluno->prox;
@@ -74,18 +76,20 @@ Aluno *busca(Lista_alunos *L, int x) {
 }
 
 void inserir_aluno(Aluno *novo_aluno, Lista_alunos *lista) {
-    if (lista->cabeca == NULL) {
+    if (lista->cabeca == NULL)//caso lista vazia
+    {
         lista->cabeca = novo_aluno;
         novo_aluno->prox = NULL;
-    } else {
+    } else
+    {
         Aluno *aux = lista->cabeca;
-        while (aux->prox != NULL)
+        while (aux->prox != NULL)//percorre a lista, ate o ultimo nó
             aux = aux->prox;
 
         aux->prox = novo_aluno;
         novo_aluno->prox = NULL;
     }
-}// insere um no Aluno na lista de alunos
+}// insere um nó Aluno na lista de alunos
 
 int funcaoespalhamento(int chave) {
 
@@ -104,23 +108,19 @@ void inserir_hash(Aluno *tabela[], int matricula, Aluno *endereco) {
 
     id = funcaoespalhamento(matricula);
 
-    while (tabela[id] != NULL) {
-        
-        id = (id + i) % TAM;
-        //printf("\nid) %i\n", id);
-        i++;
-    }
+    while (tabela[id] != NULL) //percorre a tabela caso o ind gerado pela HASH ja estaja ocupado (endereçamento aberto)
+        id = (id++) % TAM;// div por 211 para evitar "sair" da tabela e preservar a propriedade de circularidade
     tabela[id] = endereco;
 }
 
-Aluno* buscarHash (Aluno *tabela[], int matricula)
+Aluno* buscarHash (Aluno *tabela[], int matricula) //busca na tabela e retorna ponteiro para aluno 
 {
     int ind;
 
     ind = funcaoespalhamento(matricula);
 
-    while(tabela[ind]->matricula != matricula)
-        ind = (ind++) % TAM;
+    while(tabela[ind]->matricula != matricula)//percorre a tabela caso não ache no valor retornado pela funcHash, por conta do endereçamento aberto para tratar colisão
+        ind = (ind++) % TAM;// div por 211 para evitar "sair" da tabela e preservar a propriedade de circularidade 
     
     return tabela[ind];
 }
@@ -145,7 +145,7 @@ void cadastrar_aluno(Lista_alunos *lista, Aluno *tabela[]) {
         return;
     }
 
-    inserir_hash(tabela, no->matricula, no);
+    inserir_hash(tabela, no->matricula, no); //linha 
 
     getchar();
 
@@ -161,19 +161,20 @@ void cadastrar_aluno(Lista_alunos *lista, Aluno *tabela[]) {
     printf("ANO DE INGRESSO: ");
     scanf("%i", &no->ingresso);
 
-    Avaliacoes *notas = malloc(sizeof(Avaliacoes));
+    Avaliacoes *notas = malloc(sizeof(Avaliacoes)); //aloca espaço para a cabeça da lista de avaliações
     if (notas == NULL) {
         free(no);
         printf("ERRO AO ALOCAR MEMORIA PARA AS AVALIACOES");
         return;
     }
 
-    for(int i = 0; i <= lista->aula; i++)
-        no->frequencia[i] = -1;
+    
+    for(int i = 0; i <= lista->aula; i++) //adiciona falta ao vetor de frequencia do aluno, até o numero de chamadas realizadas
+        no->frequencia[i] = 1;
 
     notas = NULL;
 
-    inserir_aluno(no, lista);
+    inserir_aluno(no, lista); //linha 
 
     printf("\nCADASTRO REALIZADO COM SUCESSO\n");
     printf("\n___________________________\n");
@@ -197,7 +198,7 @@ void inserir_avl (Aluno *no, float notaMax) //recebe o nó do aluno, a nota maxi
             printf("\n!!!ERRO AO ALOCAR MEMORIA!!!");
             return;
         }
-          
+         
         avl->nMax = notaMax;
         avl->notas = nota;
         avl->prox = NULL;
@@ -205,11 +206,13 @@ void inserir_avl (Aluno *no, float notaMax) //recebe o nó do aluno, a nota maxi
             no->avaliacao = avl;  
         else
         {
+            printf("\na\n");
             aux = no->avaliacao;
             while(aux->prox != NULL) //percorre a lista até achar o ultimo nó
+            { 
                 aux = aux->prox;
-             aux = avl;
-             free(aux);
+            }
+             aux->prox = avl;
         }
     }
 }
@@ -245,7 +248,7 @@ int verificar_frequencia (Aluno *aluno) //returna quantas faltas um aluno tem
     int faltas = 0;
 
     for(;i <= 18; i++)
-        faltas += aluno->frequencia[i];
+        faltas += aluno->frequencia[i]; //loop para percorrer vetor contendo frequencia e soma as faltas
 
     return faltas;
     
@@ -263,7 +266,7 @@ void realizar_chamada(Lista_alunos *lista) {
     {
         printf("%s | %i: ", no->nome, no->matricula);
         scanf("%i", &no->frequencia[lista->aula]);
-        if (verificar_frequencia(no) >= 10)
+        if (verificar_frequencia(no) >= 10)// verifica se aluno esta reprovado por falta
         {
             printf("\n!! ALUNO REPROVADO POR FREQUENCIA !!\n");
         }
@@ -274,12 +277,8 @@ void realizar_chamada(Lista_alunos *lista) {
 
 }// contabiliza a frequência dos alunos em um determinado dia, perguntando quem está presente e ausente. Assim que um aluno atingir 10 faltas, deve imprimir um aviso dizendo que o mesmo foi reprovado por infrequência.
 
-
-// Imprime a lista de alunos informando a matrícula, nome, soma de todas as notas já registradas e o número de faltas. Além disso, antes de imprimir o relatório dá a opção de ordenar a lista por um destes campos.
-
-// Imprime o relatório de notas de uma determinada avaliação informando a nota máxima, mínima e média. Após isso, imprime todas as notas em ordem decrescente sem indicar o nome dos alunos
-
-void exibir_lista(Lista_alunos *lista) {
+void exibir_lista(Lista_alunos *lista) 
+{
     Aluno *no = lista->cabeca;
 
     if(lista->cabeca == NULL)
@@ -288,7 +287,8 @@ void exibir_lista(Lista_alunos *lista) {
     }
     else
     { 
-        while (no != NULL) {
+        while (no != NULL) 
+        {
             printf("\nMatrícula: %d", no->matricula);
             printf("\nNome: %s", no->nome);
             printf("\nCurso: %s", no->curso);
@@ -454,7 +454,7 @@ void print_ordenado(Aluno *tabela[], int tipo){
         for (int i = 0; i < cont; i++) {
             for (int j = 0; j < TAM; j++) {
                 if (tabela[j] != NULL && tabela[j]->matricula == vet[i]) {
-                    printf("Matrícula: %d, Nome: %s, Curso: %s, Ingresso: %d\n", tabela[j]->matricula, tabela[j]->nome, tabela[j]->curso, tabela[j]->ingresso);
+                    printf("|Matrícula: %d| Nome: %s| Curso: %s| Ingresso: %d|\n", tabela[j]->matricula, tabela[j]->nome, tabela[j]->curso, tabela[j]->ingresso);
                 }   
             }
         }
@@ -464,7 +464,7 @@ void print_ordenado(Aluno *tabela[], int tipo){
         quickSortSomatorio(vetSomatorio, vetNomes, 0, cont - 1);
         printf("Alunos em ordem decrescente de somatório das notas:\n");
         for (int i = cont - 1; i >= 0; i--) {
-            printf("Matrícula: %d, Nome: %s, Somatório das Notas: %.2f\n", vetNomes[i]->matricula,vetNomes[i]->nome, vetSomatorio[i]);
+            printf("|Somatório das Notas: %.2f| Matrícula: %d| curso: %s| Nome: %s|\n", vetSomatorio[i], vetNomes[i]->matricula,vetNomes[i]->nome,vetNomes[i]->curso);
         }
     }
     // Ordenação por nome
@@ -472,7 +472,7 @@ void print_ordenado(Aluno *tabela[], int tipo){
         quickSortNome(vetNomes, 0, cont - 1);
         printf("Alunos em ordem alfabética:\n");
         for (int i = 0; i < cont; i++) {
-            printf("Matrícula: %d, Nome: %s, Curso: %s, Ingresso: %d\n", vetNomes[i]->matricula, vetNomes[i]->nome, vetNomes[i]->curso, vetNomes[i]->ingresso);
+            printf("|Nome: %s| Matrícula: %d| Curso: %s| Ingresso: %d\n|",vetNomes[i]->nome, vetNomes[i]->matricula, vetNomes[i]->curso, vetNomes[i]->ingresso);
         }
     }
 }
