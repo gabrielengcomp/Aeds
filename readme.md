@@ -42,6 +42,45 @@ typedef struct lista {
     int aula;       // Número de aulas ministradas, utilizado para controlar a frequência
 } Lista_alunos;
 ```
+## Tabela Hash
+
+### Descrição
+
+Esta implementação em C utiliza uma tabela hash com endereçamento aberto para armazenar e gerenciar registros de alunos. A tabela possui 211 posições (TAM = 211) e usa uma função de espalhamento personalizada para calcular os índices. O gerenciamento de colisões é feito por endereçamento aberto, garantindo a distribuição adequada dos dados na tabela.
+
+### Estruturas de Dados
+
+- **Aluno**: Estrutura que contém informações sobre os alunos, como matrícula, nome, curso, ano de ingresso, frequência e avaliações.
+- **Avaliações**: Estrutura auxiliar vinculada a cada aluno que contém as notas obtidas em diferentes avaliações.
+  
+### Funções
+
+#### 1. **int funcaoespalhamento(int chave)**
+   - Calcula o índice da tabela hash para uma dada chave (número de matrícula do aluno) usando uma fórmula personalizada.
+   - **Parâmetro**: `chave` - Número de matrícula.
+   - **Retorno**: Índice calculado para inserir o aluno na tabela.
+
+#### 2. **void inserir_hash(Aluno *tabela[], int matricula, Aluno *endereco)**
+   - Insere um novo aluno na tabela hash.
+   - A função usa o índice gerado pela função de espalhamento e resolve colisões por meio de endereçamento aberto.
+   - **Parâmetros**:
+     - `tabela[]` - Tabela hash.
+     - `matricula` - Número de matrícula do aluno.
+     - `endereco` - Ponteiro para a estrutura do aluno a ser inserido.
+
+#### 3. **Aluno* buscarHash(Aluno *tabela[], int matricula)**
+   - Busca e retorna o ponteiro de um aluno na tabela hash, utilizando a matrícula como chave.
+   - **Parâmetros**:
+     - `tabela[]` - Tabela hash.
+     - `matricula` - Número de matrícula do aluno.
+   - **Retorno**: Ponteiro para o aluno correspondente, ou `NULL` se o aluno não for encontrado.
+
+#### 4. **void exibir_tabela_hash(Aluno *tabela[])**
+   - Exibe todos os alunos presentes na tabela hash, mostrando a matrícula, nome, curso e ano de ingresso de cada aluno armazenado.
+   - **Parâmetro**: `tabela[]` - Tabela hash.
+
+
+Esta implementação foi projetada para fins educacionais e pode ser adaptada conforme a necessidade de aumentar o número de alunos ou melhorar a função de espalhamento para otimizar a distribuição dos dados.
 
 ## Funcionalidades
 
