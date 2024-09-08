@@ -56,7 +56,9 @@ Esta implementação em C utiliza uma tabela hash com endereçamento aberto para
 ### Funções
 
 #### 1. int funcaoespalhamento(int chave)
-
+   - Calcula o índice da tabela hash para uma dada chave (número de matrícula do aluno) usando uma fórmula personalizada.
+   - **Parâmetro**: `chave` - Número de matrícula.
+   - **Retorno**: Índice calculado para inserir o aluno na tabela.
 ```c
 int funcaoespalhamento(int chave) {
 
@@ -68,11 +70,6 @@ int funcaoespalhamento(int chave) {
 }
 
 ```
-
-   - Calcula o índice da tabela hash para uma dada chave (número de matrícula do aluno) usando uma fórmula personalizada.
-   - **Parâmetro**: `chave` - Número de matrícula.
-   - **Retorno**: Índice calculado para inserir o aluno na tabela.
-
 #### 2. void inserir_hash(Aluno *tabela[], int matricula, Aluno *endereco)
    - Insere um novo aluno na tabela hash.
    - A função usa o índice gerado pela função de espalhamento e resolve colisões por meio de endereçamento aberto.
@@ -80,19 +77,62 @@ int funcaoespalhamento(int chave) {
      - `tabela[]` - Tabela hash.
      - `matricula` - Número de matrícula do aluno.
      - `endereco` - Ponteiro para a estrutura do aluno a ser inserido.
+```c
+void inserir_hash(Aluno *tabela[], int matricula, Aluno *endereco) {
+    
+    int i = 0;
+    int id = 0;
 
+    id = funcaoespalhamento(matricula);
+
+    while (tabela[id] != NULL) //percorre a tabela caso o ind gerado pela HASH ja estaja ocupado (endereçamento aberto)
+        { 
+        id++;
+        id = (id++) % TAM;// div por 211 para evitar "sair" da tabela e preservar a propriedade de circularidade
+        }
+    tabela[id] = endereco;
+}
+```
 #### 3. Aluno* buscarHash(Aluno *tabela[], int matricula)
    - Busca e retorna o ponteiro de um aluno na tabela hash, utilizando a matrícula como chave.
    - **Parâmetros**:
      - `tabela[]` - Tabela hash.
      - `matricula` - Número de matrícula do aluno.
    - **Retorno**: Ponteiro para o aluno correspondente, ou `NULL` se o aluno não for encontrado.
+```c
+Aluno* buscarHash (Aluno *tabela[], int matricula) //busca na tabela e retorna ponteiro para aluno 
+{
+    int ind;
+
+    ind = funcaoespalhamento(matricula);
+
+    while(tabela[ind]->matricula != matricula)//percorre a tabela caso não ache no valor retornado pela funcHash, por conta do endereçamento aberto para tratar colisão
+        ind = (ind++) % TAM;// div por 211 para evitar "sair" da tabela e preservar a propriedade de circularidade 
+    
+    return tabela[ind];
+}
+```
 
 #### 4. void exibir_tabela_hash(Aluno *tabela[])
    - Exibe todos os alunos presentes na tabela hash, mostrando a matrícula, nome, curso e ano de ingresso de cada aluno armazenado.
    - **Parâmetro**: `tabela[]` - Tabela hash.
 
-
+```c
+void exibir_tabela_hash(Aluno *tabela[]) {
+    printf("\nTabela Hash:\n");
+    for (int i = 0; i < TAM; i++) {
+        if (tabela[i] != NULL) {
+            printf("Posição %d:\n", i);
+            Aluno *aluno = tabela[i];
+            printf("\tMatrícula: %d\n", aluno->matricula);
+            printf("\tNome: %s\n", aluno->nome);
+            printf("\tCurso: %s\n", aluno->curso);
+            printf("\tIngresso: %d\n", aluno->ingresso);
+        }
+    }
+    printf("___________________________\n");
+}
+```
 Esta implementação foi projetada para fins educacionais e pode ser adaptada conforme a necessidade de aumentar o número de alunos ou melhorar a função de espalhamento para otimizar a distribuição dos dados.
 
 ## Ordenação
