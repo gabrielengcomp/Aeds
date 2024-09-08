@@ -407,25 +407,6 @@ int main() {
 }
 ```
 
-## Como Executar
-
-1. **Clone o repositório**:
-
-   ```bash
-   git clone https://github.com/seu_usuario/seu_repositorio.git
-   ```
-
-2. **Compile o código** usando `gcc` ou outro compilador de C:
-
-   ```bash
-   gcc main.c -o sistema
-   ```
-
-3. **Execute o programa**:
-
-   ```bash
-   ./sistema
-   ```
 
 ## Autores
 
