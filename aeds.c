@@ -135,7 +135,7 @@ void cadastrar_aluno(Lista_alunos *lista, Aluno *tabela[]) {
     }
 
     printf("\n___________________________\n");
-    printf("\nCADASTRO DE ALUNO (PARA VOLTAR DIGITE 0)\n");
+    printf("CADASTRO DE ALUNO (PARA VOLTAR DIGITE 0)\n");
 
     printf("\nMATRICULA: ");
     scanf("%i", &no->matricula);
@@ -164,7 +164,7 @@ void cadastrar_aluno(Lista_alunos *lista, Aluno *tabela[]) {
     Avaliacoes *notas = malloc(sizeof(Avaliacoes)); //aloca espaço para a cabeça da lista de avaliações
     if (notas == NULL) {
         free(no);
-        printf("ERRO AO ALOCAR MEMORIA PARA AS AVALIACOES");
+        printf("ERRO AO ALOCAR MEMORIA PARA AS AVALIACOES! 0_0");
         return;
     }
 
@@ -176,9 +176,7 @@ void cadastrar_aluno(Lista_alunos *lista, Aluno *tabela[]) {
 
     inserir_aluno(no, lista); //linha 
 
-    printf("\nCADASTRO REALIZADO COM SUCESSO\n");
-    printf("\n___________________________\n");
-
+    printf("\nCADASTRO REALIZADO COM SUCESSO!\n");
 }// solicita os dados para o cadastro de um aluno e, se já existem avaliações no sistema, pede as notas contabilizadas. Se já existem chamadas realizadas no sistema, solicita também a presença do aluno em cada um dos dias
 
 void inserir_avl (Aluno *no, float notaMax) //recebe o nó do aluno, a nota maxima, cria a avaliação e add na lista de avaliações do aluno
@@ -386,7 +384,6 @@ int particiona_somatorio(float vetSomatorio[], Aluno* vetAlunos[], int inicio, i
     return indice;
 }
 
-
 void quickSortMatricula(int vet[], int inicio, int fim) {
     if (inicio < fim) {
 
@@ -424,8 +421,46 @@ float somatorionotas(Avaliacoes *avaliacao) {
     }
     return soma;
 }
+void insertionSortMatricula(int vet[], int n) {
+    for (int i = 1; i < n; i++) {
+        int chave = vet[i];
+        int j = i - 1;
+        while (j >= 0 && vet[j] > chave) {
+            vet[j + 1] = vet[j];
+            j = j - 1;
+        }
+        vet[j + 1] = chave;
+    }
+}
 
-void print_ordenado(Aluno *tabela[], int tipo){
+void insertionSortNome(Aluno* vet[], int n) {
+    for (int i = 1; i < n; i++) {
+        Aluno* chave = vet[i];
+        int j = i - 1;
+        while (j >= 0 && strcmp(vet[j]->nome, chave->nome) > 0) {
+            vet[j + 1] = vet[j];
+            j = j - 1;
+        }
+        vet[j + 1] = chave;
+    }
+}
+
+void insertionSortSomatorio(float vetSomatorio[], Aluno* vetAlunos[], int n) {
+    for (int i = 1; i < n; i++) {
+        float chaveSomatorio = vetSomatorio[i];
+        Aluno* chaveAluno = vetAlunos[i];
+        int j = i - 1;
+        while (j >= 0 && vetSomatorio[j] > chaveSomatorio) {
+            vetSomatorio[j + 1] = vetSomatorio[j];
+            vetAlunos[j + 1] = vetAlunos[j];
+            j = j - 1;
+        }
+        vetSomatorio[j + 1] = chaveSomatorio;
+        vetAlunos[j + 1] = chaveAluno;
+    }
+}
+
+void print_ordenado(Aluno *tabela[], int tipo, int algoritmo){
     Aluno* vetNomes[TAM];
     float vetSomatorio[TAM];
     int vet[TAM];
@@ -447,35 +482,43 @@ void print_ordenado(Aluno *tabela[], int tipo){
             }
         }
     }
-    // Ordenação por matrícula
+
+    // Escolha de algoritmo de ordenação
+    if (algoritmo == 1) {
+        // Ordenação por quicksort
+        if (tipo == 1) quickSortMatricula(vet, 0, cont - 1);
+        else if (tipo == 2) quickSortSomatorio(vetSomatorio, vetNomes, 0, cont - 1);
+        else if (tipo == 3) quickSortNome(vetNomes, 0, cont - 1);
+    } else if (algoritmo == 2) {
+        // Ordenação por insertion sort
+        if (tipo == 1) insertionSortMatricula(vet, cont);
+        else if (tipo == 2) insertionSortSomatorio(vetSomatorio, vetNomes, cont);
+        else if (tipo == 3) insertionSortNome(vetNomes, cont);
+    }
+
+    // Exibir os alunos ordenados
     if (tipo == 1) {
-        quickSortMatricula(vet, 0, cont - 1);
         printf("Alunos em ordem crescente de matrícula:\n");
         for (int i = 0; i < cont; i++) {
             for (int j = 0; j < TAM; j++) {
                 if (tabela[j] != NULL && tabela[j]->matricula == vet[i]) {
-                    printf("|Matrícula: %d| Nome: %s| Curso: %s| Ingresso: %d|\n", tabela[j]->matricula, tabela[j]->nome, tabela[j]->curso, tabela[j]->ingresso);
-                }   
+                    printf("Matrícula: %d, Nome: %s, Curso: %s, Ingresso: %d\n", tabela[j]->matricula, tabela[j]->nome,tabela[j]->curso, tabela[j]->ingresso);
+                }
             }
         }
-    }
-    //ordenação por nota
-    if (tipo == 2){
-        quickSortSomatorio(vetSomatorio, vetNomes, 0, cont - 1);
+    } else if (tipo == 2) {
         printf("Alunos em ordem decrescente de somatório das notas:\n");
         for (int i = cont - 1; i >= 0; i--) {
-            printf("|Somatório das Notas: %.2f| Matrícula: %d| curso: %s| Nome: %s|\n", vetSomatorio[i], vetNomes[i]->matricula,vetNomes[i]->nome,vetNomes[i]->curso);
+            printf("Somatório das Notas: %.2f, Matrícula: %d, Nome: %s,  Curso: %s, Ingresso: %d\n",vetSomatorio[i], vetNomes[i]->matricula, vetNomes[i]->nome,  tabela[i]->curso, tabela[i]->ingresso);
         }
-    }
-    // Ordenação por nome
-    else if (tipo == 3) {
-        quickSortNome(vetNomes, 0, cont - 1);
+    } else if (tipo == 3) {
         printf("Alunos em ordem alfabética:\n");
         for (int i = 0; i < cont; i++) {
-            printf("|Nome: %s| Matrícula: %d| Curso: %s| Ingresso: %d\n|",vetNomes[i]->nome, vetNomes[i]->matricula, vetNomes[i]->curso, vetNomes[i]->ingresso);
+            printf("Nome: %s, Matrícula: %d, Curso: %s, Ingresso: %d\n", vetNomes[i]->nome, vetNomes[i]->matricula, vetNomes[i]->curso, vetNomes[i]->ingresso);
         }
     }
 }
+
 
 void relatorio_notas(Lista_alunos *lista) {
     if (lista->cabeca == NULL) {
@@ -542,29 +585,25 @@ void relatorio_notas(Lista_alunos *lista) {
 }
 
 void relatorio_alunos(Aluno *tabela[]) {
-    int op;
-    printf("como deseja realizar a ordenação?\n"
-    "[1] Por matricula\n"
-    "[2] Por somatorio das notas\n"
-    "[3] Por ordem alfabética\n");
-    scanf("%d",&op);
-
-    switch (op){
-        case 1:
-            print_ordenado(tabela, op);
-            break;
-        case 2:
-            print_ordenado(tabela, op);
-            break;
-        case 3:
-            print_ordenado(tabela, op);
-            break; 
-        default:
-            printf("Opção Inválida\n");
-            break;
+    int op, algoritmo;
+    printf("\n___________________________\n");
+    printf("Como deseja realizar a ordenação?\n[1] Por matrícula\n[2] Por somatório das notas\n[3] Por ordem alfabética\n");
+    printf("___________________________\n");
+    printf("Selecione: ");
+    scanf("%d", &op);
+    printf("\n___________________________\n");
+    printf("Escolha o algoritmo de ordenação:\n[1] Quicksort\n[2] Insertion sort\n");
+    printf("___________________________\n");
+    printf("Selecione: ");
+    scanf("%d", &algoritmo);
+    printf("\n___________________________\n");
+    if (op >= 1 && op <= 3 && (algoritmo == 1 || algoritmo == 2)) {
+        print_ordenado(tabela, op, algoritmo);
+    } else {
+        printf("Opção Inválida\n");
     }
-
 }
+
 
 void menu() {
     printf("\n___________________________\n");
@@ -575,7 +614,6 @@ void menu() {
     printf("[5] Relatório de notas\n");
     printf("[6] Exibir Lista de Alunos\n");
     printf("[7] Exibir Tabela Hash\n");
-    printf("[8] Ordenar Alunos\n");
     printf("[0] Sair\n");
     printf("___________________________\n");
 }
