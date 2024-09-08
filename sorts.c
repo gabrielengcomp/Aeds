@@ -1,6 +1,4 @@
-#include <stdlib.h>
-#include <stdio.h>
-#include "sorts.h"    
+#include "TADs.h"
 
 
 // quick sort

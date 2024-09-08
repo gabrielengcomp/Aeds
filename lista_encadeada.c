@@ -1,30 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "TADs.h"
+#include "hash.h"
 
-typedef struct avaliacoes {
-    float notas;
-    struct avaliacoes *prox;
-} Avaliacoes;
-
-/*typedef struct lista_de_avaliacoes {
-    Avaliacao *cabeca;
-} Lista_notas;*/
-
-typedef struct aluno {
-    int matricula;
-    char nome[30];
-    char curso[20];
-    int ingresso;
-    int frequencia[18];
-    int aula;
-    Avaliacoes *avaliacao; // lista de tamanho variável, aumenta com o cadastro de avaliações 
-    struct aluno *prox;
-} Aluno;
-
-typedef struct lista {
-    Aluno *cabeca;
-} Lista_alunos;
+#define TAM 211
 
 Aluno *acessa(Lista_alunos *L, int i) {
     Aluno *aluno = L->cabeca;
@@ -36,7 +16,8 @@ Aluno *acessa(Lista_alunos *L, int i) {
     return aluno;
 }// acessa a matrícula do aluno referente a matrícula armazenada na lista encadeada
 
-void excluir_aluno(Lista_alunos *L, int matricula) {
+void excluir_aluno(Lista_alunos *L, int matricula) //desconsiderar 
+{
     Aluno *atual = L->cabeca;
     Aluno *anterior = NULL;
 
@@ -65,7 +46,8 @@ void excluir_aluno(Lista_alunos *L, int matricula) {
     printf("Aluno com matrícula %d excluído com sucesso.\n", matricula);
 }
 
-Aluno *busca(Lista_alunos *L, int x) {
+Aluno *busca(Lista_alunos *L, int x) //busca aluno na lista encadeada
+{
     Aluno *aluno = L->cabeca;
     while (aluno != NULL && aluno->matricula != x) {
         aluno = aluno->prox;
@@ -74,121 +56,135 @@ Aluno *busca(Lista_alunos *L, int x) {
 }
 
 void inserir_aluno(Aluno *novo_aluno, Lista_alunos *lista) {
-    if (lista->cabeca == NULL) {
+    if (lista->cabeca == NULL)//caso lista vazia
+    {
         lista->cabeca = novo_aluno;
         novo_aluno->prox = NULL;
-    } else {
+    } else
+    {
         Aluno *aux = lista->cabeca;
-        while (aux->prox != NULL)
+        while (aux->prox != NULL)//percorre a lista, ate o ultimo nó
             aux = aux->prox;
 
         aux->prox = novo_aluno;
         novo_aluno->prox = NULL;
     }
-}// insere um no Aluno na lista de alunos
+}// insere um nó Aluno na lista de alunos
 
-void cadastrar_avaliacao(Aluno **tabela) {
+void cadastrar_aluno(Lista_alunos *lista, Aluno *tabela[]) {
+    char str[30];
+    Aluno *no = malloc(sizeof(Aluno));
 
+    if (no == NULL) {
+        printf("ERRO AO ALOCAR MEMORIA");
+        return;
+    }
+
+    printf("\n___________________________\n");
+    printf("CADASTRO DE ALUNO (PARA VOLTAR DIGITE 0)\n");
+
+    printf("\nMATRICULA: ");
+    scanf("%i", &no->matricula);
+
+    if (no->matricula == 0) {
+        free(no);
+        return;
+    }
+
+    inserir_hash(tabela, no->matricula, no); //linha 
+
+    getchar();
+
+    printf("NOME: ");
+    fgets(no->nome, sizeof(no->nome), stdin);
+    no->nome[strcspn(no->nome, "\n")] = '\0';
+
+    printf("CURSO: ");
+    fgets(str, sizeof(str), stdin);
+    str[strcspn(str, "\n")] = '\0';
+    strcpy(no->curso, str);
+
+    printf("ANO DE INGRESSO: ");
+    scanf("%i", &no->ingresso);
+
+    Avaliacoes *notas = malloc(sizeof(Avaliacoes)); //aloca espaço para a cabeça da lista de avaliações
+    if (notas == NULL) {
+        free(no);
+        printf("ERRO AO ALOCAR MEMORIA PARA AS AVALIACOES! 0_0");
+        return;
+    }
+
+    
+    for(int i = 0; i <= lista->aula; i++) //adiciona falta ao vetor de frequencia do aluno, até o numero de chamadas realizadas
+        no->frequencia[i] = 1;
+
+    notas = NULL;
+
+    inserir_aluno(no, lista); //linha 
+
+    printf("\nCADASTRO REALIZADO COM SUCESSO!\n");
+}// solicita os dados para o cadastro de um aluno e, se já existem avaliações no sistema, pede as notas contabilizadas. Se já existem chamadas realizadas no sistema, solicita também a presença do aluno em cada um dos dias
+
+void inserir_avl (Aluno *no, float notaMax) //recebe o nó do aluno, a nota maxima, cria a avaliação e add na lista de avaliações do aluno
+{
     float nota = 0;
-    int matricula = 0;
-    int id = 0;
-    int cond = 1;
-    Aluno *no;
     Avaliacoes *avl;
     Avaliacoes *aux;
+    
+    printf("\n %s| %i | NOTA: ", no->nome, no->matricula);
+    scanf("%2f", &nota);
+
+    if(nota >= 0)
+    {
+        avl = malloc(sizeof(Avaliacoes));
+        if(avl == NULL)
+        {
+            printf("\n!!!ERRO AO ALOCAR MEMORIA!!!");
+            return;
+        }
+         
+        avl->nMax = notaMax;
+        avl->notas = nota;
+        avl->prox = NULL;
+        if(no->avaliacao == NULL) //caso lista vazia
+            no->avaliacao = avl;  
+        else
+        {
+            aux = no->avaliacao;
+            while(aux->prox != NULL) //percorre a lista até achar o ultimo nó
+            { 
+                aux = aux->prox;
+            }
+             aux->prox = avl;
+        }
+    }
+}
+
+
+void cadastrar_avaliacao(Lista_alunos *Lista) 
+{
+    float notaMax = 0;
 
     printf("___________________________");
     printf("\nCADASTRO DE AVALIACOES (PARA VOLTAR DIGITE 0): ");
 
-    while(1)
+    Aluno *no = Lista->cabeca;
+
+    printf("\nNota Maxima: ");
+    scanf("%f", &notaMax);
+
+    if (notaMax <= 0) //saida opcional da função
+        return;
+    while (no != NULL) //loop para percorrer a lista de alunos 
     {
-        cond = 1;
-        printf("\nMatricula: ");
-        scanf("%i", &matricula);
-
-        if(matricula == 0)
-            break;
-        else
-        {
-            id = funcaoespalhamento(matricula);
-
-            if(tabela[id] == NULL)
-            {
-                printf("\nMATRICULA NAO ENCONTRADA\n");
-                cond = 0;
-            }
-            else
-            {
-                no = tabela[id];
-            }
-
-            while(cond)
-            {
-                printf("\nNOTA: ");
-                scanf("%2f", &nota);
-                cond = (nota == -1) ? 0 : 1;
-
-                printf("\na\n");
-                if(nota >= 0)
-                {
-                    avl = malloc(sizeof(Avaliacoes));
-                    
-                    avl->notas = nota;
-                    avl->prox = NULL;
-                    printf("\nb\n");
-                    if(no->avaliacao == NULL)
-                    {
-                      no->avaliacao = avl;  
-                    }
-                    else
-                    {
-                        aux = no->avaliacao;
-                        printf("\nd");
-                        while(aux->prox != NULL)
-                            printf("\nc\n");
-                            aux = aux->prox;
-                        
-                        aux = avl;
-                        printf("\ne");
-                    }
-                    printf("\nf");
-                }
-                printf("\ng");
-
-            }
-            printf("\nh");
-        }
-        printf("\ni");
-
+        inserir_avl(no, notaMax); // linha 187
+        no = no->prox;
     }
 }
 
-void realizar_chamada(Lista_alunos *lista) {
-    
-    Aluno *no = lista->cabeca;
 
-    printf("\nREALIZANDO CHAMDA\n");
-
-    while(no != NULL)
-    {
-        printf("%s | %i: ", no->nome, no->matricula);
-        scanf("%i", &no->frequencia[no->aula]);
-        no->aula++;
-        no = no->prox;
-
-    }
-
-   /* int i = 0;
-
-    for(;i <= 18; i++)
-    {
-        printf("%i ", no->frequencia[i]);
-    }
-    printf("\n");*/
-
-}// contabiliza a frequência dos alunos em um determinado dia, perguntando quem está presente e ausente. Assim que um aluno atingir 10 faltas, deve imprimir um aviso dizendo que o mesmo foi reprovado por infrequência.
-
-void exibir_lista(Lista_alunos *lista) {
+void exibir_lista(Lista_alunos *lista) 
+{
     Aluno *no = lista->cabeca;
 
     if(lista->cabeca == NULL)
@@ -197,7 +193,8 @@ void exibir_lista(Lista_alunos *lista) {
     }
     else
     { 
-        while (no != NULL) {
+        while (no != NULL) 
+        {
             printf("\nMatrícula: %d", no->matricula);
             printf("\nNome: %s", no->nome);
             printf("\nCurso: %s", no->curso);
