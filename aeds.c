@@ -206,7 +206,6 @@ void inserir_avl (Aluno *no, float notaMax) //recebe o nó do aluno, a nota maxi
             no->avaliacao = avl;  
         else
         {
-            printf("\na\n");
             aux = no->avaliacao;
             while(aux->prox != NULL) //percorre a lista até achar o ultimo nó
             { 
@@ -247,7 +246,7 @@ int verificar_frequencia (Aluno *aluno) //returna quantas faltas um aluno tem
     int i = 0;
     int faltas = 0;
 
-    for(;i <= 18; i++)
+    for(;i < 18; i++)
         faltas += aluno->frequencia[i]; //loop para percorrer vetor contendo frequencia e soma as faltas
 
     return faltas;
