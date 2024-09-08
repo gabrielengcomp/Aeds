@@ -1,8 +1,8 @@
+#include "hash.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "TADs.h"
-#include "hash.h"
 
 #define TAM 211
 
@@ -91,7 +91,7 @@ void cadastrar_aluno(Lista_alunos *lista, Aluno *tabela[]) {
         return;
     }
 
-    inserir_hash(tabela, no->matricula, no); //linha 
+    //inserir_hash(tabela, no->matricula, no); //linha 
 
     getchar();
 

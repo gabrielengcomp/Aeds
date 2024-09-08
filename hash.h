@@ -1,5 +1,5 @@
 #ifdef __HASH__
-#define __HASH
+#define __HASH__
 
 int funcaoespalhamento(int chave);
 void inserir_hash(Aluno *tabela[], int matricula, Aluno *endereco);

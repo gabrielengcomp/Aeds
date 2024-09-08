@@ -1,4 +1,6 @@
 #include "TADs.h"
+#include <stdio.h>
+#include <string.h>
 
 
 // quick sort

@@ -4,6 +4,9 @@
 #include "sorts.h"
 #include "sorts.h"
 #include "lista_encadeada.h"
+#include "TADs.h"
+
+#define TAM 211
 
 int verificar_frequencia (Aluno *aluno) //returna quantas faltas um aluno tem  
 {

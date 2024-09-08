@@ -1,7 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-//#include "lista_encadeada.h"
-//#include "sorts.h"
 #include "TADs.h"
 
 #define TAM 211
