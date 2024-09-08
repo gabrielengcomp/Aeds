@@ -56,6 +56,19 @@ Esta implementação em C utiliza uma tabela hash com endereçamento aberto para
 ### Funções
 
 #### 1. int funcaoespalhamento(int chave)
+
+```c
+int funcaoespalhamento(int chave) {
+
+    int val = 0;
+    long int a = ((3^10)*20);
+    val = (a*(a + chave^3))%TAM;
+
+    return val;
+}
+
+```
+
    - Calcula o índice da tabela hash para uma dada chave (número de matrícula do aluno) usando uma fórmula personalizada.
    - **Parâmetro**: `chave` - Número de matrícula.
    - **Retorno**: Índice calculado para inserir o aluno na tabela.
