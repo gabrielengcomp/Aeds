@@ -46,7 +46,7 @@ typedef struct lista {
 
 ### Descrição
 
-Esta implementação em C utiliza uma tabela hash com endereçamento aberto para armazenar e gerenciar registros de alunos. A tabela possui 211 posições (TAM = 211) e usa uma função de espalhamento personalizada para calcular os índices. O gerenciamento de colisões é feito por endereçamento aberto, garantindo a distribuição adequada dos dados na tabela.
+Esta implementação em C utiliza uma tabela hash com endereçamento aberto para armazenar e gerenciar registros de alunos. A tabela possui 211 posições (TAM = 211) e usa uma função de espalhamento personalizada para calcular os índices. O gerenciamento de colisões é feito por endereçamento aberto, garantindo a distribuição adequada dos dados na tabela. O endereçamento aberto foi escolhido tendo em base o fator de carga do vetor e o espalhamento da função hash.
 
 ### Estruturas de Dados
 
@@ -55,7 +55,7 @@ Esta implementação em C utiliza uma tabela hash com endereçamento aberto para
   
 ### Funções
 
-#### 1. **int funcaoespalhamento(int chave)**
+#### 1. int funcaoespalhamento(int chave)
    - Calcula o índice da tabela hash para uma dada chave (número de matrícula do aluno) usando uma fórmula personalizada.
    - **Parâmetro**: `chave` - Número de matrícula.
    - **Retorno**: Índice calculado para inserir o aluno na tabela.
@@ -68,14 +68,14 @@ Esta implementação em C utiliza uma tabela hash com endereçamento aberto para
      - `matricula` - Número de matrícula do aluno.
      - `endereco` - Ponteiro para a estrutura do aluno a ser inserido.
 
-#### 3. **Aluno* buscarHash(Aluno *tabela[], int matricula)**
+#### 3. Aluno* buscarHash(Aluno *tabela[], int matricula)
    - Busca e retorna o ponteiro de um aluno na tabela hash, utilizando a matrícula como chave.
    - **Parâmetros**:
      - `tabela[]` - Tabela hash.
      - `matricula` - Número de matrícula do aluno.
    - **Retorno**: Ponteiro para o aluno correspondente, ou `NULL` se o aluno não for encontrado.
 
-#### 4. **void exibir_tabela_hash(Aluno *tabela[])**
+#### 4. void exibir_tabela_hash(Aluno *tabela[])
    - Exibe todos os alunos presentes na tabela hash, mostrando a matrícula, nome, curso e ano de ingresso de cada aluno armazenado.
    - **Parâmetro**: `tabela[]` - Tabela hash.
 
