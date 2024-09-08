@@ -93,27 +93,8 @@ void inserir_hash(Aluno *tabela[], int matricula, Aluno *endereco) {
     tabela[id] = endereco;
 }
 ```
-#### 3. Aluno* buscarHash(Aluno *tabela[], int matricula)
-   - Busca e retorna o ponteiro de um aluno na tabela hash, utilizando a matrícula como chave.
-   - **Parâmetros**:
-     - `tabela[]` - Tabela hash.
-     - `matricula` - Número de matrícula do aluno.
-   - **Retorno**: Ponteiro para o aluno correspondente, ou `NULL` se o aluno não for encontrado.
-```c
-Aluno* buscarHash (Aluno *tabela[], int matricula) //busca na tabela e retorna ponteiro para aluno 
-{
-    int ind;
 
-    ind = funcaoespalhamento(matricula);
-
-    while(tabela[ind]->matricula != matricula)//percorre a tabela caso não ache no valor retornado pela funcHash, por conta do endereçamento aberto para tratar colisão
-        ind = (ind++) % TAM;// div por 211 para evitar "sair" da tabela e preservar a propriedade de circularidade 
-    
-    return tabela[ind];
-}
-```
-
-#### 4. void exibir_tabela_hash(Aluno *tabela[])
+#### 3. void exibir_tabela_hash(Aluno *tabela[])
    - Exibe todos os alunos presentes na tabela hash, mostrando a matrícula, nome, curso e ano de ingresso de cada aluno armazenado.
    - **Parâmetro**: `tabela[]` - Tabela hash.
 
