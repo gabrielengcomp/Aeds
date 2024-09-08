@@ -96,7 +96,6 @@ int funcaoespalhamento(int chave) {
     int val = 0;
     long int a = ((3^10)*20);
     val = (a*(a + chave^3))%TAM;
-    printf("%i\n", val);
 
     return val;
 }
@@ -109,7 +108,10 @@ void inserir_hash(Aluno *tabela[], int matricula, Aluno *endereco) {
     id = funcaoespalhamento(matricula);
 
     while (tabela[id] != NULL) //percorre a tabela caso o ind gerado pela HASH ja estaja ocupado (endereçamento aberto)
+        { 
+        id++;
         id = (id++) % TAM;// div por 211 para evitar "sair" da tabela e preservar a propriedade de circularidade
+        }
     tabela[id] = endereco;
 }
 
