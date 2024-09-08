@@ -48,11 +48,6 @@ typedef struct lista {
 
 Esta implementação em C utiliza uma tabela hash com endereçamento aberto para armazenar e gerenciar registros de alunos. A tabela possui 211 posições (TAM = 211) e usa uma função de espalhamento personalizada para calcular os índices. O gerenciamento de colisões é feito por endereçamento aberto, garantindo a distribuição adequada dos dados na tabela. O endereçamento aberto foi escolhido tendo em base o fator de carga do vetor e o espalhamento da função hash.
 
-### Estruturas de Dados
-
-- **Aluno**: Estrutura que contém informações sobre os alunos, como matrícula, nome, curso, ano de ingresso, frequência e avaliações.
-- **Avaliações**: Estrutura auxiliar vinculada a cada aluno que contém as notas obtidas em diferentes avaliações.
-  
 ### Funções
 
 #### 1. int funcaoespalhamento(int chave)
