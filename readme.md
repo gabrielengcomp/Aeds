@@ -60,7 +60,7 @@ Esta implementação em C utiliza uma tabela hash com endereçamento aberto para
    - **Parâmetro**: `chave` - Número de matrícula.
    - **Retorno**: Índice calculado para inserir o aluno na tabela.
 
-#### 2. **void inserir_hash(Aluno *tabela[], int matricula, Aluno *endereco) **
+#### 2. void inserir_hash(Aluno *tabela[], int matricula, Aluno *endereco)
    - Insere um novo aluno na tabela hash.
    - A função usa o índice gerado pela função de espalhamento e resolve colisões por meio de endereçamento aberto.
    - **Parâmetros**:
