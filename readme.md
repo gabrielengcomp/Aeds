@@ -82,62 +82,26 @@ Esta implementação em C utiliza uma tabela hash com endereçamento aberto para
 
 Esta implementação foi projetada para fins educacionais e pode ser adaptada conforme a necessidade de aumentar o número de alunos ou melhorar a função de espalhamento para otimizar a distribuição dos dados.
 
-## Funcionalidades
+## Ordenação
 
-### 1. `verificar_frequencia(Aluno *aluno)`
-
-Função que calcula o número total de faltas de um aluno, somando as ausências em seu vetor de frequência.
-
-```c
-int verificar_frequencia(Aluno *aluno) {
-    int faltas = 0;
-    for (int i = 0; i < 18; i++) {
-        faltas += aluno->frequencia[i];
-    }
-    return faltas;
-}
-```
-
-### 2. `realizar_chamada(Lista_alunos *lista)`
-
-Função para realizar a chamada dos alunos. O usuário insere 0 para presente e 1 para ausente. Se um aluno acumular 10 ou mais faltas, é exibido um aviso de reprovação por frequência.
-
-```c
-void realizar_chamada(Lista_alunos *lista) {
-    Aluno *no = lista->cabeca;
-    lista->aula++;
-
-    printf("\nREALIZANDO CHAMADA\n0 para presente\n1 para ausente\n");
-
-    while (no != NULL) {
-        printf("%s | %i: ", no->nome, no->matricula);
-        scanf("%i", &no->frequencia[lista->aula]);
-        if (verificar_frequencia(no) >= 10) {
-            printf("\n!! ALUNO REPROVADO POR FREQUENCIA !!\n");
-        }
-        no = no->prox;
-    }
-}
-```
-
-### 3. Funções de Troca
+### 1. Funções de Troca
 
 Estas funções auxiliam nos algoritmos de ordenação, trocando elementos nos vetores.
 
-- **`troca(int vet[], int a, int b)`**: Troca dois elementos em um vetor de inteiros.
+- **`troca_matricula(int vet[], int a, int b)`**: Troca dois elementos em um vetor de inteiros.
 
   ```c
-  void troca(int vet[], int a, int b) {
+  void troca_matricula(int vet[], int a, int b) {
       int temp = vet[a];
       vet[a] = vet[b];
       vet[b] = temp;
   }
   ```
 
-- **`troca_aluno(Aluno* vet[], int i, int j)`**: Troca dois elementos em um vetor de alunos.
+- **`troca_nome(Aluno* vet[], int i, int j)`**: Troca dois elementos em um vetor de alunos.
 
   ```c
-  void troca_aluno(Aluno* vet[], int i, int j) {
+  void troca_nome(Aluno* vet[], int i, int j) {
       Aluno* temp = vet[i];
       vet[i] = vet[j];
       vet[j] = temp;
@@ -159,25 +123,25 @@ Estas funções auxiliam nos algoritmos de ordenação, trocando elementos nos v
   }
   ```
 
-### 4. Algoritmos de Partição para QuickSort
+### 2. Algoritmos de Partição para QuickSort
 
 Estas funções são utilizadas pelo QuickSort para dividir os vetores em sub-vetores menores.
 
-- **`particiona(int vet[], int inicio, int fim)`**: Particiona um vetor de inteiros.
+- **`particiona_matricula(int vet[], int inicio, int fim)`**: Particiona um vetor de inteiros.
 
   ```c
-  int particiona(int vet[], int inicio, int fim){
+  int particiona_matricula(int vet[], int inicio, int fim){
       int pivo = vet[fim];
       int indice = inicio;
       
       for(int i = inicio; i < fim; i++){
           if(vet[i] <= pivo){
-              troca(vet, i, indice);
+              troca_matricula(vet, i, indice);
               indice++;
           }
       }
       
-      troca(vet, indice, fim);
+      troca_matricula(vet, indice, fim);
       
       return indice;
   }
@@ -192,12 +156,12 @@ Estas funções são utilizadas pelo QuickSort para dividir os vetores em sub-ve
       
       for (int i = inicio; i < fim; i++) {
           if (strcmp(vet[i]->nome, pivo->nome) < 0) {
-              troca_aluno(vet, i, indice);
+              troca_nome(vet, i, indice);
               indice++;
           }
       }
 
-      troca_aluno(vet, indice, fim);
+      troca_nome(vet, indice, fim);
       
       return indice;
   }
@@ -222,7 +186,7 @@ Estas funções são utilizadas pelo QuickSort para dividir os vetores em sub-ve
   }
   ```
 
-### 5. Algoritmos de Ordenação
+### 3. Algoritmos de Ordenação
 
 Implementações dos algoritmos QuickSort e Insertion Sort para diferentes tipos de dados.
 
@@ -233,7 +197,7 @@ Implementações dos algoritmos QuickSort e Insertion Sort para diferentes tipos
     ```c
     void quickSortMatricula(int vet[], int inicio, int fim) {
         if (inicio < fim) {
-            int pivo = particiona(vet, inicio, fim);
+            int pivo = particiona_matricula(vet, inicio, fim);
             quickSortMatricula(vet, inicio, pivo - 1);
             quickSortMatricula(vet, pivo + 1, fim);
         }
@@ -317,7 +281,45 @@ Implementações dos algoritmos QuickSort e Insertion Sort para diferentes tipos
     }
     ```
 
-### 6. `print_ordenado(Aluno *tabela[], int tipo, int algoritmo)`
+## Funcionalidades
+
+### 1. `verificar_frequencia(Aluno *aluno)`
+
+Função que calcula o número total de faltas de um aluno, somando as ausências em seu vetor de frequência.
+
+```c
+int verificar_frequencia(Aluno *aluno) {
+    int faltas = 0;
+    for (int i = 0; i < 18; i++) {
+        faltas += aluno->frequencia[i];
+    }
+    return faltas;
+}
+```
+
+### 2. `realizar_chamada(Lista_alunos *lista)`
+
+Função para realizar a chamada dos alunos. O usuário insere 0 para presente e 1 para ausente. Se um aluno acumular 10 ou mais faltas, é exibido um aviso de reprovação por frequência.
+
+```c
+void realizar_chamada(Lista_alunos *lista) {
+    Aluno *no = lista->cabeca;
+    lista->aula++;
+
+    printf("\nREALIZANDO CHAMADA\n0 para presente\n1 para ausente\n");
+
+    while (no != NULL) {
+        printf("%s | %i: ", no->nome, no->matricula);
+        scanf("%i", &no->frequencia[lista->aula]);
+        if (verificar_frequencia(no) >= 10) {
+            printf("\n!! ALUNO REPROVADO POR FREQUENCIA !!\n");
+        }
+        no = no->prox;
+    }
+}
+```
+
+### 3. `print_ordenado(Aluno *tabela[], int tipo, int algoritmo)`
 
 Função que imprime os dados dos alunos ordenados de acordo com o tipo de ordenação escolhido:
 
@@ -336,7 +338,7 @@ void print_ordenado(Aluno *tabela[], int tipo, int algoritmo) {
 }
 ```
 
-### 7. `somatorionotas(Avaliacoes *avaliacao)`
+### 4. `somatorionotas(Avaliacoes *avaliacao)`
 
 Calcula o somatório das notas de um aluno percorrendo sua lista de avaliações.
 
@@ -352,7 +354,7 @@ float somatorionotas(Avaliacoes *avaliacao) {
 }
 ```
 
-### 8. `relatorio_notas(Lista_alunos *lista)`
+### 5. `relatorio_notas(Lista_alunos *lista)`
 
 Gera um relatório com a nota máxima, mínima, e média das notas dos alunos, além de exibir as notas em ordem decrescente.
 
@@ -363,7 +365,7 @@ void relatorio_notas(Lista_alunos *lista) {
 }
 ```
 
-### 9. `relatorio_alunos(Aluno *tabela[])`
+### 6. `relatorio_alunos(Aluno *tabela[])`
 
 Gera um relatório de alunos permitindo ao usuário escolher o tipo de ordenação (matrícula, somatório de notas ou ordem alfabética) e o algoritmo (QuickSort ou InsertionSort).
 
@@ -389,7 +391,7 @@ void relatorio_alunos(Aluno *tabela[]) {
 }
 ```
 
-### 10. `menu()`
+### 7. `menu()`
 
 Exibe o menu principal do sistema, com opções para cadastrar alunos, registrar avaliações, realizar chamada, gerar relatórios e sair do programa.
 
@@ -408,7 +410,7 @@ void menu() {
 }
 ```
 
-### 11. `main()`
+### 8. `main()`
 
 Função principal que inicializa a lista de alunos e a tabela hash e chama o menu para o controle do sistema.
 
