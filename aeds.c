@@ -1,12 +1,162 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "sorts.h"
-#include "sorts.h"
-#include "lista_encadeada.h"
 #include "TADs.h"
 
 #define TAM 211
+
+void inserir_aluno(Aluno *novo_aluno, Lista_alunos *lista) {
+    if (lista->cabeca == NULL)//caso lista vazia
+    {
+        lista->cabeca = novo_aluno;
+        novo_aluno->prox = NULL;
+    } else
+    {
+        Aluno *aux = lista->cabeca;
+        while (aux->prox != NULL)//percorre a lista, ate o ultimo nó
+            aux = aux->prox;
+
+        aux->prox = novo_aluno;
+        novo_aluno->prox = NULL;
+    }
+}// insere um nó Aluno na lista de alunos
+
+int funcaoespalhamento(int chave) {
+
+    int val = 0;
+    long int a = ((3^10)*20);
+    val = (a*(a + chave^3))%TAM;
+
+    return val;
+}
+
+void inserir_hash(Aluno *tabela[], int matricula, Aluno *endereco) {
+    
+    int i = 0;
+    int id = 0;
+
+    id = funcaoespalhamento(matricula);
+
+    while (tabela[id] != NULL) //percorre a tabela caso o ind gerado pela HASH ja estaja ocupado (endereçamento aberto)
+        { 
+        id++;
+        id = (id++) % TAM;// div por 211 para evitar "sair" da tabela e preservar a propriedade de circularidade
+        }
+    tabela[id] = endereco;
+}
+
+void cadastrar_aluno(Lista_alunos *lista, Aluno *tabela[]) {
+    char str[30];
+    Aluno *no = malloc(sizeof(Aluno));
+
+    if (no == NULL) {
+        printf("ERRO AO ALOCAR MEMORIA");
+        return;
+    }
+
+    printf("\n____________________________________\n");
+    printf("CADASTRO DE ALUNO (PARA VOLTAR DIGITE 0)\n");
+
+    printf("\nMATRICULA: ");
+    scanf("%i", &no->matricula);
+
+    if (no->matricula == 0) {
+        free(no);
+        return;
+    }
+
+    inserir_hash(tabela, no->matricula, no); //linha 
+
+    getchar();
+
+    printf("NOME: ");
+    fgets(no->nome, sizeof(no->nome), stdin);
+    no->nome[strcspn(no->nome, "\n")] = '\0';
+
+    printf("CURSO: ");
+    fgets(str, sizeof(str), stdin);
+    str[strcspn(str, "\n")] = '\0';
+    strcpy(no->curso, str);
+
+    printf("ANO DE INGRESSO: ");
+    scanf("%i", &no->ingresso);
+
+    Avaliacoes *notas = malloc(sizeof(Avaliacoes)); //aloca espaço para a cabeça da lista de avaliações
+    if (notas == NULL) {
+        free(no);
+        printf("ERRO AO ALOCAR MEMORIA PARA AS AVALIACOES! 0_0");
+        return;
+    }
+
+    
+    for(int i = 0; i <= lista->aula; i++) //adiciona falta ao vetor de frequencia do aluno, até o numero de chamadas realizadas
+        no->frequencia[i] = 1;
+
+    notas = NULL;
+
+    inserir_aluno(no, lista); //linha 
+
+    printf("\nCADASTRO REALIZADO COM SUCESSO!\n");
+}// solicita os dados para o cadastro de um aluno e, se já existem avaliações no sistema, pede as notas contabilizadas. Se já existem chamadas realizadas no sistema, solicita também a presença do aluno em cada um dos dias
+
+void inserir_avl (Aluno *no, float notaMax) //recebe o nó do aluno, a nota maxima, cria a avaliação e add na lista de avaliações do aluno
+{
+    float nota = 0;
+    Avaliacoes *avl;
+    Avaliacoes *aux;
+    
+    printf("\n %s| %i | NOTA: ", no->nome, no->matricula);
+    scanf("%f", &nota);
+
+    if(nota >= 0)
+    {
+        avl = malloc(sizeof(Avaliacoes));
+        if(avl == NULL)
+        {
+            printf("\n!!!ERRO AO ALOCAR MEMORIA!!!");
+            return;
+        }
+         
+        avl->nMax = notaMax;
+        avl->notas = nota;
+        avl->prox = NULL;
+        if(no->avaliacao == NULL) //caso lista vazia
+            no->avaliacao = avl;  
+        else
+        {
+            aux = no->avaliacao;
+            while(aux->prox != NULL) //percorre a lista até achar o ultimo nó
+            { 
+                aux = aux->prox;
+            }
+             aux->prox = avl;
+        }
+    }
+}
+
+
+void cadastrar_avaliacao(Lista_alunos *Lista) 
+{
+    float notaMax = 0;
+
+    printf("____________________________________");
+    printf("\nCADASTRO DE AVALIACOES (PARA VOLTAR DIGITE 0): ");
+
+    Aluno *no = Lista->cabeca;
+
+    printf("\nNota Maxima: ");
+    scanf("%f", &notaMax);
+
+    if (notaMax <= 0) //saida opcional da função
+        return;
+    while (no != NULL) //loop para percorrer a lista de alunos 
+    {
+        inserir_avl(no, notaMax); // linha 187
+        no = no->prox;
+    }
+}
+
+
 
 int verificar_frequencia (Aluno *aluno) //returna quantas faltas um aluno tem  
 {
@@ -43,6 +193,45 @@ void realizar_chamada(Lista_alunos *lista) {
     }
 
 }// contabiliza a frequência dos alunos em um determinado dia, perguntando quem está presente e ausente. Assim que um aluno atingir 10 faltas, deve imprimir um aviso dizendo que o mesmo foi reprovado por infrequência.
+
+void exibir_lista(Lista_alunos *lista) 
+{
+    Aluno *no = lista->cabeca;
+
+    if(lista->cabeca == NULL)
+    {
+        printf("\nNAO HA ALUNOS CADASTRADOS\n");
+    }
+    else
+    { 
+        while (no != NULL) 
+        {
+            printf("\nMatrícula: %d", no->matricula);
+            printf("\nNome: %s", no->nome);
+            printf("\nCurso: %s", no->curso);
+            printf("\nIngresso: %d\n", no->ingresso);
+            no = no->prox;
+        }
+    }
+
+    printf("____________________________________");
+}
+
+void exibir_tabela_hash(Aluno *tabela[]) {
+    printf("\nTabela Hash:\n");
+    for (int i = 0; i < TAM; i++) {
+        if (tabela[i] != NULL) {
+            printf("Posição %d:\n", i);
+            Aluno *aluno = tabela[i];
+            printf("\tMatrícula: %d\n", aluno->matricula);
+            printf("\tNome: %s\n", aluno->nome);
+            printf("\tCurso: %s\n", aluno->curso);
+            printf("\tIngresso: %d\n", aluno->ingresso);
+        }
+    }
+    printf("____________________________________\n");
+}
+
 
 void troca(int vet[], int a, int b) {
     int temp = vet[a];
@@ -102,14 +291,13 @@ int particiona_nome(Aluno* vet[], int inicio, int fim) {
 int particiona_somatorio(float vetSomatorio[], Aluno* vetAlunos[], int inicio, int fim) {
     float pivo = vetSomatorio[fim];
     int indice = inicio;
-
+    
     for (int i = inicio; i < fim; i++) {
-        if (vetSomatorio[i] <= pivo) {
+        if (vetSomatorio[i] >= pivo) {  // Note a comparação reversa para ordem decrescente
             troca_somatorio(vetAlunos, vetSomatorio, i, indice);
             indice++;
         }
     }
-
     troca_somatorio(vetAlunos, vetSomatorio, indice, fim);
     return indice;
 }
@@ -180,40 +368,39 @@ void insertionSortSomatorio(float vetSomatorio[], Aluno* vetAlunos[], int n) {
         float chaveSomatorio = vetSomatorio[i];
         Aluno* chaveAluno = vetAlunos[i];
         int j = i - 1;
-        while (j >= 0 && vetSomatorio[j] > chaveSomatorio) {
+        while (j >= 0 && vetSomatorio[j] < chaveSomatorio) {  // Note a comparação reversa para ordem decrescente
             vetSomatorio[j + 1] = vetSomatorio[j];
             vetAlunos[j + 1] = vetAlunos[j];
-            j = j - 1;
+            j--;
         }
         vetSomatorio[j + 1] = chaveSomatorio;
         vetAlunos[j + 1] = chaveAluno;
     }
 }
 
-void print_ordenado(Aluno *tabela[], int tipo, int algoritmo){
+void print_ordenado(Aluno *tabela[], int tipo, int algoritmo) {
     Aluno* vetNomes[TAM];
     float vetSomatorio[TAM];
     int vet[TAM];
     int cont = 0;
+    
     for (int i = 0; i < TAM; i++) {
         if (tabela[i] != NULL) {
-            if (tipo == 1){
+            if (tipo == 1) {
                 vet[cont] = tabela[i]->matricula;
                 cont++;
-            }
-            else if (tipo == 2){
+            } else if (tipo == 2) {
                 vetNomes[cont] = tabela[i];
                 vetSomatorio[cont] = somatorionotas(tabela[i]->avaliacao);
                 cont++;
-            }
-            else if (tipo == 3){
+            } else if (tipo == 3) {
                 vetNomes[cont] = tabela[i];
                 cont++;
             }
         }
     }
 
-    // Escolha de algoritmo de ordenação
+    // Escolha do algoritmo de ordenação
     if (algoritmo == 1) {
         // Ordenação por quicksort
         if (tipo == 1) quickSortMatricula(vet, 0, cont - 1);
@@ -232,23 +419,22 @@ void print_ordenado(Aluno *tabela[], int tipo, int algoritmo){
         for (int i = 0; i < cont; i++) {
             for (int j = 0; j < TAM; j++) {
                 if (tabela[j] != NULL && tabela[j]->matricula == vet[i]) {
-                    printf("Matrícula: %d, Nome: %s, Curso: %s, Ingresso: %d\n", tabela[j]->matricula, tabela[j]->nome,tabela[j]->curso, tabela[j]->ingresso);
+                    printf("Matrícula: %d| Nome: %s| Curso: %s| Ingresso: %d\n", tabela[j]->matricula, tabela[j]->nome, tabela[j]->curso, tabela[j]->ingresso);
                 }
             }
         }
     } else if (tipo == 2) {
-        printf("Alunos em ordem decrescente de somatório das notas:\n");
+        printf("Alunos em ordem crescente de somatório das notas:\n");
         for (int i = cont - 1; i >= 0; i--) {
-            printf("Somatório das Notas: %.2f, Matrícula: %d, Nome: %s,  Curso: %s, Ingresso: %d\n",vetSomatorio[i], vetNomes[i]->matricula, vetNomes[i]->nome,  tabela[i]->curso, tabela[i]->ingresso);
+            printf("Somatório das Notas: %.2f| Matrícula: %d| Nome: %s| Curso: %s| Ingresso: %d\n", vetSomatorio[i], vetNomes[i]->matricula, vetNomes[i]->nome, vetNomes[i]->curso, vetNomes[i]->ingresso);
         }
     } else if (tipo == 3) {
         printf("Alunos em ordem alfabética:\n");
         for (int i = 0; i < cont; i++) {
-            printf("Nome: %s, Matrícula: %d, Curso: %s, Ingresso: %d\n", vetNomes[i]->nome, vetNomes[i]->matricula, vetNomes[i]->curso, vetNomes[i]->ingresso);
+            printf("Nome: %s| Matrícula: %d| Curso: %s| Ingresso: %d\n", vetNomes[i]->nome, vetNomes[i]->matricula, vetNomes[i]->curso, vetNomes[i]->ingresso);
         }
     }
 }
-
 
 void relatorio_notas(Lista_alunos *lista) {
     if (lista->cabeca == NULL) {
@@ -316,17 +502,17 @@ void relatorio_notas(Lista_alunos *lista) {
 
 void relatorio_alunos(Aluno *tabela[]) {
     int op, algoritmo;
-    printf("\n___________________________\n");
+    printf("\n____________________________________\n");
     printf("Como deseja realizar a ordenação?\n[1] Por matrícula\n[2] Por somatório das notas\n[3] Por ordem alfabética\n");
-    printf("___________________________\n");
+    printf("____________________________________\n");
     printf("Selecione: ");
     scanf("%d", &op);
-    printf("\n___________________________\n");
+    printf("\n____________________________________\n");
     printf("Escolha o algoritmo de ordenação:\n[1] Quicksort\n[2] Insertion sort\n");
-    printf("___________________________\n");
+    printf("____________________________________\n");
     printf("Selecione: ");
     scanf("%d", &algoritmo);
-    printf("\n___________________________\n");
+    printf("\n____________________________________\n");
     if (op >= 1 && op <= 3 && (algoritmo == 1 || algoritmo == 2)) {
         print_ordenado(tabela, op, algoritmo);
     } else {
@@ -336,7 +522,7 @@ void relatorio_alunos(Aluno *tabela[]) {
 
 
 void menu() {
-    printf("\n___________________________\n");
+    printf("\n____________________________________\n");
     printf("[1] Cadastrar Aluno\n");
     printf("[2] Cadastrar Avaliação\n");
     printf("[3] Chamada\n");
@@ -345,14 +531,14 @@ void menu() {
     printf("[6] Exibir Lista de Alunos\n");
     printf("[7] Exibir Tabela Hash\n");
     printf("[0] Sair\n");
-    printf("___________________________\n");
+    printf("____________________________________\n");
 }
 
 int main() {
 
     Lista_alunos Lista_de_alunos;
     Lista_de_alunos.cabeca = NULL;
-    Lista_de_alunos.aula = 0;
+    Lista_de_alunos.aula = -1;
 
     Aluno *tabela[TAM] = {NULL};
     int opc = 0;
